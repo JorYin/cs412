@@ -3,12 +3,21 @@
 <html>
   <head>
     <title>Hot Pancakes</title>
-    <link rel="stylesheet" href="% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'restaurant_styles.css' %}">
   </head>
 
   <body>
-    {% block content %}
+    <h1>Hot Pancakes</h1>
     
+    <nav>
+      <ul>
+          <li><a href="{% url 'restaurant_main' %}">Main Page</a></li>
+          <li><a href="{% url 'restaurant_order' %}">Order</a></li>
+      </ul>
+    </nav>
+
+    {% block content %}
+
     {% endblock %}
   </body>
 

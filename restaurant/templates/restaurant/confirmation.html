@@ -1,5 +1,26 @@
 {% extends 'restaurant/base.html'%}
 {% block content %}
 
+<div id="confirmation"> 
+
+<h2>Confirmation</h2>
+<p>Pick up at: {{Random_Order_Time}}</p>
+
+<h2>Your Order</h2>
+{%for order in Customer_Orders%}
+<p>{{order}}</p>
+{% endfor %}
+
+<h2>Special Instructions</h2>
+<p>{{Special_Instructions}}</p>
+
+<h3>Total: ${{Customer_Total}}</h3>
+
+<h4>Customer Information</h4>
+<p>{{Customer_Name}}</p>
+<p>{{Customer_Phone}}</p>
+<p>{{Customer_Email}}</p>
+
+</div>
 
 {% endblock %}

@@ -1,5 +1,56 @@
 {% extends 'restaurant/base.html'%}
 {% block content %}
 
+<div>
+  <form action="{% url 'restaurant_confirmation' %}" method="POST">
+      {% csrf_token %}
+      <h2>Menu Items</h2>
+      <div id="menu">
+        <div> 
+          <input type="checkbox" name="menu" value="Hot_Pancakes_Platter_12"><label>Hot Pancakes Platter $12</label>
+        </div>
+
+        <div> 
+          <input type="checkbox" name="menu" value="Chicken_Fried_Steak_15"><label>Chicken Fried Steak $15</label>
+        </div>
+        
+        <div>
+          <input type="checkbox" name="menu" value="Monte_Cristo_Sandwich_9"><label>Monte Cristo Sandwich $9</label>
+        </div>
+        
+        <div> 
+          <input type="checkbox" name="menu" value="Garden_Salad_6"><label>Garden Salad $6</label>
+        </div>
+      </div>
+
+      <h2>Daily Special</h2>
+      <div> 
+        <input type="checkbox" name="Daily_Special" value="Daily_Special_10"><label>{{Daily_Special}} $10</label>
+      </div>
+
+      <h2>Special Instruction</h2>
+      <div> 
+        <textarea name="Special_Instructions" row=3 cols=40></textarea>
+      </div>
+
+      <h2>Customer Information</h2>
+      <div id="info"> 
+        <div>
+          <label for="Customer_Name">Name</label>
+          <input type="text" name="Customer_Name">
+        </div>
+        <div>
+          <label for="Customer_Phone">Phone</label>
+          <input type="tel" name="Customer_Phone">
+        </div>
+        <div>
+          <label for="Customer_Email">Email</label>
+          <input type="email" name="Customer_Email">
+        </div>
+      </div>
+
+      <input type="submit">
+  </form>
+</div>
 
 {% endblock %}
