@@ -1,10 +1,12 @@
-# file: restaurant/urls.py
+# File: urls.py
+# Author: Jordan Yin (jordany@bu.edu), 09/23/2026
+# Description: Routing configuration mapping URL patterns to view functions for the restaurant app.
 
 from django.urls import path
 from django.conf import settings
 from . import views
 
-# URL patterns specific to the hw app:
+# URL patterns specific to the restaurant app:
 urlpatterns = [
     path(r'', views.main_restaurant, name="/"),
     path(r'main', views.main_restaurant, name="restaurant_main"),

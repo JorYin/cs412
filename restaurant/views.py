@@ -1,20 +1,33 @@
+# File: views.py
+# Author: Jordan Yin (jordany@bu.edu), 09/23/2026
+# Description: View functions for the restaurant app to display the 
+# landing page, order form, and handle order processing and confirmation.
+
 from django.shortcuts import render
 import random
 import time
 
 # Create your views here.
 def main_restaurant (request):
+  """Render the main landing page for the restaurant."""
+  
   template_name = 'restaurant/main.html'
   
   return render(request, template_name)
 
 def order_restaurant (request):
+  """Render the order page with a randomly selected daily special."""
+  
   template_name = 'restaurant/order.html'
   
-  # All the daily specials
-  All_Daily_Special = ["Chocolate Chips Chicken Waffle", "Oreo Waffle", "Pumpkin Waffle"]
+  # Define list of available daily specials
+  All_Daily_Special = [
+    "Chocolate Chips Chicken Waffle", 
+    "Oreo Waffle", 
+    "Pumpkin Waffle"
+  ]
   
-  # Get a random daily special
+  # Pick a random daily special
   Current_Daily_Special = All_Daily_Special[random.randint(0, len(All_Daily_Special)-1)]
   
   context={
@@ -24,13 +37,16 @@ def order_restaurant (request):
   return render(request, template_name, context)
   
 def confirmation_restaurant (request):
+  """Process submitted order form data and display the confirmation page."""
+  
   template_name = 'restaurant/confirmation.html'
   template_redirect = 'restaurant/order.html'
   
   # If a POST then go into the logic. Otherwise "redirect" to order form
   if request.POST:
     
-    # Need some interval of 30 - 60 min difference from local time
+    # Calculate a random pickup time 30-60 minutes in the future
+    # Need some interval of 30-60 min difference from local time
     Random_Interval = random.randint(30,60)
     Seconds_Passed = Random_Interval * 60
     
