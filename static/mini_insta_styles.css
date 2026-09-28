@@ -1,0 +1,89 @@
+/* This CSS was derived from NetNinja's multi-column grid example. */
+
+body {
+    margin: 30px;
+    background: #d1dedd;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+ul, li {
+    padding: 0px;
+    list-style-type: none;
+}
+
+header {
+    max-width: 1200px;
+    margin: 40px auto;
+    border-bottom: 1px solid #bbc7c7;
+}
+.grid-container {
+    background: #eee;
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 2rem;
+    border-radius: 2rem;
+}
+
+img{
+  width: 480px;
+  height: 480px;
+  border-radius: 400px;
+}
+
+#show_all_profile_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #d0d2d2;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+#show_all_profile_container p{
+  margin: 0;
+}
+
+#show_all_username{
+  font-size: 1.5rem;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+#show_all_profile_container img{
+  max-width: 100px;
+  max-height: 100px;
+}
+
+nav li {
+    display: inline;
+}
+
+#show_profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #d0d2d2;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+/* responsive styles: adapt to smaller screen sizes */
+@media screen and (max-width: 980px) {
+
+}
+
+@media screen and (max-width: 760px) {
+
+}

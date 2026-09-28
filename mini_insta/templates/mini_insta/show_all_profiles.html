@@ -8,11 +8,13 @@ Description: Template that extends base.html to display a grid of all registered
 {% block content %}
 <main class="grid-container">
     {% for p in profiles %}
-      <a href="{% url 'show_profile' p.pk %}">
-        <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
-        <p>{{p.username}}</p>
-        <p>{{p.display_name}}</p>
-      </a>
+    <a href="{% url 'show_profile' p.pk %}">
+      <div id="show_all_profile_container">
+          <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
+          <p id="show_all_username">@{{p.username}}</p>
+          <p>{{p.display_name}}</p>
+      </div>
+    </a>
     {% endfor %}
 </main>
 {% endblock %}
