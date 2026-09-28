@@ -1,17 +1,23 @@
-from django.shortcuts import render
+# File: views.py
+# Author: Jordan Yin (jordany@bu.edu), 09/27/2026
+# Description: Class-based views for the mini_insta app to list all Instagram user profiles and view individual profile details.
 
-# Create your views here.
+from django.shortcuts import render
+from django.views.generic import DetailView, ListView
 from .models import Profile
-from django.views.generic import ListView, DetailView
 
 class ProfileListView(ListView):
-  '''Create a subclass of ListView to display all instagram profiles.'''
-  model = Profile # retrieve objects of type Profile from the database
+  """Display a list of all Instagram user profiles in the database."""
+  
+  # retrieve objects of type Profile from the database
+  model = Profile
   template_name = 'mini_insta/show_all_profiles.html'
-  context_object_name = 'profiles' # how to find the data in the template file
+  # variable name in template context
+  context_object_name = 'profiles'
     
 class ProfileDetailView(DetailView):
-  '''Show the details for one profile.'''
+  """Display detailed profile information for a single user profile."""
+  
   model = Profile
-  template_name = 'mini_insta/show_profile.html' ## reusing same template!!
+  template_name = 'mini_insta/show_profile.html'
   context_object_name = 'profile'
