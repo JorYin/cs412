@@ -5,11 +5,11 @@
 {% block content %}
 <main class="grid-container">
     {% for p in profiles %}
-    <div>
-      <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
-      <p>{{p.username}}</p>
-      <p>{{p.display_name}}</p>
-    </div>
+      <a href="{% url 'show_profile' p.pk %}">
+        <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
+        <p>{{p.username}}</p>
+        <p>{{p.display_name}}</p>
+      </a>
     {% endfor %}
 </main>
 {% endblock %}
