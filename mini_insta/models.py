@@ -5,7 +5,7 @@
 from django.db import models
 
 class Profile(models.Model):
-    """Model representing an Instagram user profile."""
+    """Represent an Instagram user profile."""
     
     # data attributes for a user profile:
     username = models.TextField(blank=False)
@@ -23,12 +23,14 @@ class Profile(models.Model):
         return f'{self.username} by {self.display_name}'
 
     def get_all_posts(self):
-        '''Return all of the post about this Instagram user.'''
+        """Return this profile's posts in reverse chronological order."""
+
+        # Retrieve only posts belonging to this profile and show newest first.
         posts = Post.objects.filter(profile=self).order_by('-timestamp')
         return posts
     
 class Post(models.Model):
-    """Model representing a post for an Instagram user profile"""
+    """Represent a post created by an Instagram user profile."""
     
     # data attributes for a user post:
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
@@ -40,12 +42,14 @@ class Post(models.Model):
         return f'{self.profile} post at {self.timestamp}'
     
     def get_all_photos(self):
-        '''Return all of the photos about this Instagram post.'''
+        """Return all photos associated with this post."""
+
+        # Retrieve every Photo whose foreign key points to this post.
         photos = Photo.objects.filter(post=self)
         return photos
 
 class Photo(models.Model):
-    """Model representing a photo for Instagram Post"""
+    """Represent a photo associated with an Instagram post."""
     
     # data attributes for Photos:
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
@@ -53,5 +57,5 @@ class Photo(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        """Return a string representation of the Photo for that Instagram Post"""
+        """Return a string representation of this post photo."""
         return f'{self.post} at {self.timestamp}'
