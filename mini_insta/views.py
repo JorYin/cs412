@@ -55,7 +55,8 @@ class CreatePostView(CreateView):
     """Attach the profile, save the post, and create its related photo."""
 
     # Read the image URL from the explicit HTML field in the submitted form.
-    image_url = self.request.POST.get('image_url')
+    # image_url = self.request.POST.get('image_url')
+    image_files = self.request.FILES.getlist('files')
     
     # Find the profile identified by the primary key in the URL.
     pk = self.kwargs['pk']
@@ -68,10 +69,11 @@ class CreatePostView(CreateView):
     response = super().form_valid(form)
     
     # Create the separate Photo record after the Post has a primary key.
-    Photo.objects.create(
-      post=self.object,
-      image_url=image_url
-    )
+    for image_file in image_files:
+      Photo.objects.create(
+          post=self.object,
+          image_file=image_file
+      )
     
     return response
 

@@ -6,13 +6,15 @@
 <h1>Create a new Post for @{{profile.username}}</h1>
 
 <!-- display the HTML form -->
-<form id="create_post_form" action="{% url 'create_post' profile.pk %}" method="POST">
+<form id="create_post_form" action="{% url 'create_post' profile.pk %}" method="POST" enctype="multipart/form-data" >
     {% csrf_token %}
+    <label for="files">Select photos:</label>
+    <input type="file" name="files" multiple>
     <table id="create_post_table">
       {{form.as_table}}
     </table>
-    <label for="image_url">Image URL:</label>
-    <input type="url" id="image_url" name="image_url">
+    {% comment %} <label for="image_url">Image URL:</label>
+    <input type="url" id="image_url" name="image_url"> {% endcomment %}
     <div id="create_post_buttons">
       <input type="submit" name="submit" value="Submit">
       <a href="{% url 'show_profile' profile.pk %}">Cancel</a>

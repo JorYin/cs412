@@ -19,8 +19,8 @@ Description: Template that extends base.html to display detailed profile informa
           <div>
             <!-- Show only the first photo for each post on the profile page. -->
             {% with image=post.get_all_photos|first %}
-              {% if image and image.image_url %}
-                <img class="post_img" src="{{ image.image_url }}" alt="Post image">
+              {% if image and image.get_image_url %}
+                <img class="post_img" src="{{ image.get_image_url }}" alt="Post image">
               {% else %}
                 <img class="post_img" src="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80"
                     alt="No photo">
