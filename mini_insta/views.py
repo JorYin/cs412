@@ -4,7 +4,7 @@
 
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
-from .models import Profile
+from .models import Profile, Post, Photo
 
 class ProfileListView(ListView):
   """Display a list of all Instagram user profiles in the database."""
@@ -21,3 +21,11 @@ class ProfileDetailView(DetailView):
   model = Profile
   template_name = 'mini_insta/show_profile.html'
   context_object_name = 'profile'
+
+class PostDetailView(DetailView):
+  """Display detailed post information for a user's post"""
+  
+  model = Post
+  template_name = 'mini_insta/show_post.html'
+  context_object_name = 'post'
+  

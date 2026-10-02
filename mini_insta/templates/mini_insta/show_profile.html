@@ -11,5 +11,23 @@ Description: Template that extends base.html to display detailed profile informa
     <p>{{profile.display_name}}</p>
     <p>{{profile.bio_text}}</p>
     <p>{{profile.join_date}}</p>
+
+    <h1>Posts</h1>
+      <!-- Loop through this profile's posts and make each post clickable. -->
+      {% for post in profile.get_all_posts %}
+        <a href="{% url 'show_post' post.pk %}"> 
+          <div>
+            <!-- Show only the first photo for each post on the profile page. -->
+            {% with image=post.get_all_photos|first %}
+              {% if image and image.image_url %}
+                <img class="post_img" src="{{ image.image_url }}" alt="Post image">
+              {% else %}
+                <img class="post_img" src="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80"
+                    alt="No photo">
+              {% endif %}
+            {% endwith %}
+          </div>
+        </a>
+      {% endfor %}
   </div>
 {% endblock %}

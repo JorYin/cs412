@@ -1,0 +1,24 @@
+<!-- File: show_post.html
+Author: Jordan Yin (jordany@bu.edu), 10/01/2026
+Description: Template that extends base.html to display detailed post information for a specific Instagram user. -->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+  <div id="show_post">
+    <h1>@{{ post.profile.username }}</h1>
+
+    <!-- Loop through all photos because the detail page shows the complete post. -->
+    {% for image in post.get_all_photos %}
+      {% if image.image_url %}
+        <img src ="{{image.image_url}}" alt= "image">
+      {% endif %}
+      {% empty %}
+        <!-- The empty branch runs when this post has no Photo records. -->
+        <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
+    {% endfor %}
+
+    <p>{{post.caption}}</p>
+    <p>{{post.timestamp}}</p>
+  </div>
+{% endblock %}
