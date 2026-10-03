@@ -7,6 +7,7 @@ Description: Template that extends base.html to display a grid of all registered
 
 {% block content %}
 <main class="grid-container">
+  <!-- Loop through all profiles and link each one to its detail page. -->
     {% for p in profiles %}
     <a href="{% url 'show_profile' p.pk %}">
       <div id="show_all_profile_container">

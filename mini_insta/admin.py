@@ -5,7 +5,7 @@
 from django.contrib import admin
 from .models import Profile, Post, Photo
 
-# register the Profile model with the Django admin interface:
+# Register the Profile, Post, and Photo models with the Django admin interface.
 admin.site.register(Profile)
 admin.site.register(Post)
 admin.site.register(Photo)

@@ -10,6 +10,7 @@ Description: Template that extends base.html to display detailed post informatio
 
     <!-- Loop through all photos because the detail page shows the complete post. -->
     {% for image in post.get_all_photos %}
+      <!-- Display an image only when the Photo has a URL or uploaded file. -->
       {% if image.get_image_url %}
         <img src ="{{image.get_image_url}}" alt= "image">
       {% endif %}

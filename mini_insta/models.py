@@ -7,15 +7,13 @@ from django.db import models
 class Profile(models.Model):
     """Represent an Instagram user profile."""
     
-    # data attributes for a user profile:
+    # Data attributes for a user profile:
     username = models.TextField(blank=False)
     display_name = models.TextField(blank=False)
     profile_image_url = models.URLField(blank=True)
     
-    # Should I make bio blank = True?
     bio_text = models.TextField(blank=False)
     
-    # Should join date be actual join date or just auto when created?
     join_date = models.DateTimeField(auto_now=True)
     
     def __str__(self):
@@ -32,13 +30,13 @@ class Profile(models.Model):
 class Post(models.Model):
     """Represent a post created by an Instagram user profile."""
     
-    # data attributes for a user post:
+    # Data attributes for a user post:
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
     caption = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        """Return a string representation of the Post for that Profile"""
+        """Return a string representation of this post and its profile."""
         return f'{self.profile} post at {self.timestamp}'
     
     def get_all_photos(self):
@@ -51,7 +49,7 @@ class Post(models.Model):
 class Photo(models.Model):
     """Represent a photo associated with an Instagram post."""
     
-    # data attributes for Photos:
+    # Data attributes for a photo:
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     image_url = models.URLField(blank=True)
     image_file = models.ImageField(blank=True)
@@ -59,9 +57,12 @@ class Photo(models.Model):
 
     def get_image_url(self):
         """Return the URL for this photo's image."""
+
+        # Prefer the existing public URL for backwards compatibility.
         if self.image_url:
             return self.image_url
 
+        # If there is no public URL, use the URL for the uploaded image file.
         if self.image_file:
             return self.image_file.url
 
@@ -69,9 +70,12 @@ class Photo(models.Model):
     
     def __str__(self):
         """Return a string describing the photo and its storage location."""
+
+        # Identify photos that still use an external image URL.
         if self.image_url:
             return f'{self.post} photo from URL: {self.image_url}'
 
+        # Identify photos stored as uploaded files in the media directory.
         if self.image_file:
             return f'{self.post} photo from file: {self.image_file.name}'
 

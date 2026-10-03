@@ -11,10 +11,10 @@ from django.urls import reverse
 class ProfileListView(ListView):
   """Display all Instagram user profiles in the database."""
   
-  # retrieve objects of type Profile from the database
+  # Retrieve objects of type Profile from the database
   model = Profile
   template_name = 'mini_insta/show_all_profiles.html'
-  # variable name in template context
+  # Variable name in template context
   context_object_name = 'profiles'
     
 class ProfileDetailView(DetailView):
@@ -54,21 +54,20 @@ class CreatePostView(CreateView):
   def form_valid(self, form):
     """Attach the profile, save the post, and create its related photo."""
 
-    # Read the image URL from the explicit HTML field in the submitted form.
-    # image_url = self.request.POST.get('image_url')
+    # Collect every uploaded file from the multipart form submission.
     image_files = self.request.FILES.getlist('files')
     
     # Find the profile identified by the primary key in the URL.
     pk = self.kwargs['pk']
     profile = Profile.objects.get(pk=pk)
     
-    # Set the required foreign key before CreateView saves the Post.
+    # Set the profile before CreateView saves the Post.
     form.instance.profile = profile
     
-    # Save the Post and prepare the redirect response.
+    # Save the Post and prepare the response that redirects to its detail page.
     response = super().form_valid(form)
     
-    # Create the separate Photo record after the Post has a primary key.
+    # Create one Photo record for each uploaded file after the Post is saved.
     for image_file in image_files:
       Photo.objects.create(
           post=self.object,

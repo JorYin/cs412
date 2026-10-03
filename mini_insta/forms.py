@@ -1,6 +1,6 @@
 # File: forms.py
 # Author: Jordan Yin (jordany@bu.edu), 10/02/2026
-# Description: Define forms for creating mini_insta model data.
+# Description: Define the form used to create a new Post.
 
 from django import forms
 from .models import *
