@@ -21,5 +21,7 @@ Description: Template that extends base.html to display detailed post informatio
 
     <p>{{post.caption}}</p>
     <p>{{post.timestamp}}</p>
+    <a href="{% url 'delete_post' post.pk %}">Delete Post</a>
+    <a href="{% url 'update_post' post.pk %}">Update Post</a>
   </div>
 {% endblock %}

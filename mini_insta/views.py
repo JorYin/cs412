@@ -3,9 +3,9 @@
 # Description: Class-based views for the mini_insta app to list all Instagram user profiles and view individual profile details.
 
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from .models import Profile, Post, Photo
-from .forms import CreatePostForm, UpdateProfileForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from django.urls import reverse
 
 class ProfileListView(ListView):
@@ -92,3 +92,31 @@ class UpdateProfileView(UpdateView):
   def form_valid(self, form):
       """"""
       return super().form_valid(form)
+    
+class DeletePostView(DeleteView):
+  """Confirm and delete a post."""
+
+  template_name = "mini_insta/delete_post_form.html"
+  model = Post
+  context_object_name = 'post'
+
+  def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['profile'] = self.object.profile
+      return context
+  
+  def get_success_url(self):
+    """Return to the profile that owned the deleted post."""
+    return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
+
+class UpdatePostView(UpdateView):
+  """Update an existing post."""
+  
+  model = Post
+  form_class = UpdatePostForm
+  template_name = "mini_insta/update_post_form.html"
+  context_object_name = 'post'
+  
+  def get_success_url(self):
+    """Return to the post detail page after updating."""
+    return reverse('show_post', kwargs={'pk': self.object.pk})
