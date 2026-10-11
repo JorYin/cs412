@@ -3,6 +3,7 @@
 # Description: Database model definition for user profiles in the mini_insta application.
 
 from django.db import models
+from django.urls import reverse
 
 class Profile(models.Model):
     """Represent an Instagram user profile."""
@@ -26,6 +27,10 @@ class Profile(models.Model):
         # Retrieve only posts belonging to this profile and show newest first.
         posts = Post.objects.filter(profile=self).order_by('-timestamp')
         return posts
+
+    def get_absolute_url(self):
+        '''Return the URL to display one instance of this model.'''
+        return reverse('show_profile', kwargs={'pk': self.pk})
     
 class Post(models.Model):
     """Represent a post created by an Instagram user profile."""

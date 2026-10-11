@@ -3,9 +3,9 @@
 # Description: Class-based views for the mini_insta app to list all Instagram user profiles and view individual profile details.
 
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView
 from .models import Profile, Post, Photo
-from .forms import CreatePostForm
+from .forms import CreatePostForm, UpdateProfileForm
 from django.urls import reverse
 
 class ProfileListView(ListView):
@@ -81,3 +81,14 @@ class CreatePostView(CreateView):
 
     # Reverse the post detail route using the saved post's primary key.
     return reverse('show_post', kwargs={'pk': self.object.pk})
+  
+class UpdateProfileView(UpdateView):
+  """"""
+  
+  model = Profile
+  form_class = UpdateProfileForm
+  template_name = "mini_insta/update_profile_form.html"
+  
+  def form_valid(self, form):
+      """"""
+      return super().form_valid(form)
