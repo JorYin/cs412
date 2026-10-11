@@ -138,6 +138,23 @@ nav li {
   padding: 1rem;
 }
 
+.post-action-link {
+  display: inline-block;
+  margin: 0.25rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+.update-link {
+  background-color: #1976d2;
+}
+
+.delete-link {
+  background-color: #c62828;
+}
+
 /* responsive styles: adapt to smaller screen sizes */
 @media screen and (max-width: 980px) {
 

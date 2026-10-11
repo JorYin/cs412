@@ -19,9 +19,20 @@ Description: Template that extends base.html to display detailed post informatio
         <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
     {% endfor %}
 
+    <p>{{ post.get_likes|length }} likes</p>
     <p>{{post.caption}}</p>
     <p>{{post.timestamp}}</p>
-    <a href="{% url 'delete_post' post.pk %}">Delete Post</a>
-    <a href="{% url 'update_post' post.pk %}">Update Post</a>
+    <section>
+      <h2>Comments</h2>
+      {% for comment in post.get_all_comments %}
+        <p><strong>@{{ comment.profile.username }}</strong> {{ comment.text }}</p>
+      {% empty %}
+        <p>No comments yet.</p>
+      {% endfor %}
+    </section>
+    <p>
+      <a class="post-action-link update-link" href="{% url 'update_post' post.pk %}">Update Post</a>
+      <a class="post-action-link delete-link" href="{% url 'delete_post' post.pk %}">Delete Post</a>
+    </p>
   </div>
 {% endblock %}

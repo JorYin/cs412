@@ -12,6 +12,14 @@ Description: Template that extends base.html to display detailed profile informa
     <p>{{profile.bio_text}}</p>
     <p>{{profile.join_date}}</p>
     <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
+    <p>
+      <a href="{% url 'show_followers' profile.pk %}">
+        Followers: {{ profile.get_num_followers }}
+      </a>
+      <a href="{% url 'show_following' profile.pk %}">
+        Following: {{ profile.get_following|length }}
+      </a>
+    </p>
 
     <h1>Posts</h1>
       <!-- Loop through this profile's posts and make each post clickable. -->

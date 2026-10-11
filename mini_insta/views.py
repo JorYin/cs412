@@ -24,6 +24,20 @@ class ProfileDetailView(DetailView):
   template_name = 'mini_insta/show_profile.html'
   context_object_name = 'profile'
 
+class ShowFollowersDetailView(DetailView):
+  """Display the profiles following a selected profile."""
+
+  model = Profile
+  template_name = 'mini_insta/show_followers.html'
+  context_object_name = 'profile'
+
+class ShowFollowingDetailView(DetailView):
+  """Display the profiles followed by a selected profile."""
+
+  model = Profile
+  template_name = 'mini_insta/show_following.html'
+  context_object_name = 'profile'
+
 class PostDetailView(DetailView):
   """Display detailed information for one user's post."""
   
