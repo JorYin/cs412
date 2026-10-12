@@ -1,0 +1,12 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+<p><a href="{% url 'show_profile' profile.pk %}">Back to profile</a></p>
+<form method='GET' >
+    <label>Search for text, tags, or people</label>
+    <input type='text' name='query'>
+    <input type='submit' value="Search">
+</form>
+
+
+{% endblock %}

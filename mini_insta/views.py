@@ -4,6 +4,7 @@
 
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.db.models import Q
 from .models import Profile, Post, Photo
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from django.urls import reverse
@@ -142,6 +143,52 @@ class UpdatePostView(UpdateView):
     return reverse('show_post', kwargs={'pk': self.object.pk})
   
 class ShowFeedView(DetailView):
+  """"""
+  
   model = Profile
   template_name = "mini_insta/show_feed.html"
   context_object_name = 'profile'
+  
+class SearchView(ListView):
+  """"""
+  
+  model = Post
+  template_name = 'mini_insta/search_results.html'
+  
+  def dispatch(self, request, *args, **kwargs):
+    pk = self.kwargs['pk']
+    profile = Profile.objects.get(pk=pk)
+    query = request.GET.get('query')
+
+    if query is None:
+      return render(
+          request,
+          'mini_insta/search.html',
+          {'profile': profile}
+      )
+      
+    return super().dispatch(request, *args, **kwargs)
+    
+  def get_queryset(self):
+    """"""
+    query = self.request.GET.get('query').strip()
+    return Post.objects.filter(caption__contains = query)
+    
+  def get_context_data(self, **kwargs):
+    """"""
+    context = super().get_context_data(**kwargs)
+    
+    pk = self.kwargs['pk']
+    profile = Profile.objects.get(pk=pk)
+    query = self.request.GET.get('query').strip()
+    
+    context['profile'] = profile
+    context['query'] = query
+    context['posts'] = self.get_queryset()
+    context['profiles'] = Profile.objects.filter(
+      Q(username__contains=query) |
+      Q(display_name__contains=query) |
+      Q(bio_text__contains=query)
+    )
+
+    return context
