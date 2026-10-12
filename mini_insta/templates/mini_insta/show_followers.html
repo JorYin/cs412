@@ -1,7 +1,12 @@
+<!-- File: show_followers.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display the profiles that follow the selected profile. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
   <h1>Followers of @{{ profile.username }}</h1>
+  <!-- Loop through each follower and link to that follower's profile page. -->
   {% for follow in profile.get_followers %}
     <p>
       <a href="{% url 'show_profile' follow.follower_profile.pk %}">

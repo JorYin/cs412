@@ -1,9 +1,14 @@
+<!-- File: update_profile_form.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display the form used to update a profile. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 <form method='POST'>
   {% csrf_token %}
   <table>
+    <!-- Loop through each editable profile field and render its input. -->
     {% for field in form %}
     <tr>
         <th>{{field.name}}</th>

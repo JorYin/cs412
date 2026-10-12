@@ -1,9 +1,14 @@
+<!-- File: show_feed.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display posts from profiles followed by the selected profile. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
   <h1>@{{profile.username}} Feed</h1>
   <p><a href="{% url 'show_profile' profile.pk %}">Back to profile</a></p>
   <div class="profile_feed_container">
+    <!-- Loop through the selected profile's personalized feed. -->
     {% for post in profile.get_post_feed %}
       <div class="profile_feed_post">
         <div class="profile_feed_post_header">
@@ -13,6 +18,7 @@
         </div>
 
         <div class="profile_feed_post_img">
+          <!-- Loop through each photo belonging to the current post. -->
           {% for image in post.get_all_photos %}
             <!-- Display an image only when the Photo has a URL or uploaded file. -->
             {% if image.get_image_url %}
@@ -27,6 +33,7 @@
         <p><strong>{{post.profile.username}}</strong> {{post.caption}}</p>
         
         <h2>Comments</h2>
+        <!-- Loop through each comment belonging to the current post. -->
         {% for comment in post.get_all_comments %}
           <p><strong>@{{ comment.profile.username }}</strong> {{ comment.text }}</p>
         {% empty %}

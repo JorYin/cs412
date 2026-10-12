@@ -104,14 +104,14 @@ class CreatePostView(CreateView):
     return reverse('show_post', kwargs={'pk': self.object.pk})
   
 class UpdateProfileView(UpdateView):
-  """"""
+  """Display and process the form used to update a Profile."""
   
   model = Profile
   form_class = UpdateProfileForm
   template_name = "mini_insta/update_profile_form.html"
   
   def form_valid(self, form):
-      """"""
+      """Save a valid profile update."""
       return super().form_valid(form)
     
 class DeletePostView(DeleteView):
@@ -122,9 +122,11 @@ class DeletePostView(DeleteView):
   context_object_name = 'post'
 
   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['profile'] = self.object.profile
-      return context
+    """Add the post owner's profile to the delete confirmation context."""
+    
+    context = super().get_context_data(**kwargs)
+    context['profile'] = self.object.profile
+    return context
   
   def get_success_url(self):
     """Return to the profile that owned the deleted post."""
@@ -143,19 +145,21 @@ class UpdatePostView(UpdateView):
     return reverse('show_post', kwargs={'pk': self.object.pk})
   
 class ShowFeedView(DetailView):
-  """"""
+  """Display the personalized post feed for a Profile."""
   
   model = Profile
   template_name = "mini_insta/show_feed.html"
   context_object_name = 'profile'
   
 class SearchView(ListView):
-  """"""
+  """Search post captions and profile information."""
   
   model = Post
   template_name = 'mini_insta/search_results.html'
   
   def dispatch(self, request, *args, **kwargs):
+    """Display the search form until a query is submitted."""
+    
     pk = self.kwargs['pk']
     profile = Profile.objects.get(pk=pk)
     query = request.GET.get('query')
@@ -170,12 +174,14 @@ class SearchView(ListView):
     return super().dispatch(request, *args, **kwargs)
     
   def get_queryset(self):
-    """"""
+    """Return posts whose captions contain the submitted query."""
+    
     query = self.request.GET.get('query').strip()
     return Post.objects.filter(caption__contains = query)
     
   def get_context_data(self, **kwargs):
-    """"""
+    """Add the searching profile and matching profiles to the context."""
+    
     context = super().get_context_data(**kwargs)
     
     pk = self.kwargs['pk']

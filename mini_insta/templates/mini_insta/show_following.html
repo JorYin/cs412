@@ -1,7 +1,12 @@
+<!-- File: show_following.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display the profiles followed by the selected profile. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
   <h1>@{{ profile.username }} is following</h1>
+  <!-- Loop through each following relationship and link to the followed profile. -->
   {% for follow in profile.get_following %}
     <p>
       <a href="{% url 'show_profile' follow.profile.pk %}">

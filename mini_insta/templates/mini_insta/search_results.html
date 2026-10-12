@@ -1,3 +1,7 @@
+<!-- File: search_results.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display matching profiles and posts for a submitted search. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
@@ -6,6 +10,7 @@
 
   <section>
     <h2>Profiles</h2>
+    <!-- Loop through profiles whose username, display name, or bio matches. -->
     {% for result_profile in profiles %}
       <div>
         <a href="{% url 'show_profile' result_profile.pk %}">
@@ -22,6 +27,7 @@
   <section>
     <h2>Posts</h2>
     <div class="profile_feed_container">
+      <!-- Loop through posts whose captions match the submitted search. -->
       {% for post in posts %}
         <div class="profile_feed_post">
           <div class="profile_feed_post_header">

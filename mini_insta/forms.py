@@ -23,9 +23,9 @@ class UpdateProfileForm(forms.ModelForm):
     fields = ['display_name', 'bio_text', 'profile_image_url']  # which fields from model should we use
 
 class UpdatePostForm(forms.ModelForm):
-  """"""
+  """A form to handle the update to an existing Post."""
   
   class Meta:
-    """"""
+    """Associate this form with the Post model."""
     model = Post
     fields = ['caption']

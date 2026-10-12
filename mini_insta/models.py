@@ -45,13 +45,15 @@ class Profile(models.Model):
         return reverse('show_profile', kwargs={'pk': self.pk})
     
     def get_post_feed(self):
-        """"""
+        """Return posts from profiles followed by this profile."""
         following = self.get_following()
         posts = []
 
+        # Visit each follow relationship to collect posts from the followed profile.
         for follow in following:
             profile_posts = Post.objects.filter(profile=follow.profile)
 
+            # Add each matching post so the result is one flat list of posts.
             for post in profile_posts:
                 posts.append(post)
 
@@ -120,19 +122,19 @@ class Photo(models.Model):
         return f'{self.post} photo with no image'
     
 class Follow(models.Model):
-    """"""
+    """Represent one profile following another profile."""
     
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile")
     follower_profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="follower_profile")
     timestamp = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        """"""
+        """Return a string describing the following relationship."""
 
         return f'{self.follower_profile} follows {self.profile}'
     
 class Comment(models.Model):
-    """"""
+    """Represent a comment made by a profile on a post."""
     
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
@@ -141,18 +143,18 @@ class Comment(models.Model):
 
     
     def __str__(self):
-        """"""
+        """Return a string describing this comment."""
 
         return f'{self.profile} commented on {self.post}: {self.text}'
     
 class Like(models.Model):
-    """"""
+    """Represent approval of a post by a profile."""
     
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        """"""
+        """Return a string describing this like."""
 
         return f'{self.profile} liked {self.post}'

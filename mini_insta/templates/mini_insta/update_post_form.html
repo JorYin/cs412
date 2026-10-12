@@ -1,9 +1,14 @@
+<!-- File: update_post_form.html
+Author: Jordan Yin (jordany@bu.edu), 10/12/2026
+Description: Display the form used to update an existing post. -->
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 <form method='POST'>
   {% csrf_token %}
   <table>
+    <!-- Loop through each editable post field and render its input. -->
     {% for field in form %}
     <tr>
         <th>{{field.name}}</th>

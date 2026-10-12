@@ -24,6 +24,7 @@ Description: Template that extends base.html to display detailed post informatio
     <p>{{post.timestamp}}</p>
     <section>
       <h2>Comments</h2>
+      <!-- Loop through each comment associated with this post. -->
       {% for comment in post.get_all_comments %}
         <p><strong>@{{ comment.profile.username }}</strong> {{ comment.text }}</p>
       {% empty %}
