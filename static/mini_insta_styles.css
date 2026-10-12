@@ -2,8 +2,48 @@
 
 body {
     margin: 30px;
-    background: #d1dedd;
+    background: #fbfbfb;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.profile_feed_container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.profile_feed_post{
+  max-height: 20%;
+  width: 100%;
+  max-width: 500px;
+  margin: 1rem auto 1rem auto;
+}
+
+.profile_feed_post_img img{
+  max-width: 100%;
+  border-radius: 10px;
+  border-color: #acacac;
+  border: 1px solid;
+}
+
+.profile_feed_post_header{
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.profile_feed_post_header_img{
+  max-width: 30px;
+  max-height: 30px;
+  border: 2px solid;
+  border-color: black;
+}
+
+.post_username{
+  font-weight: bold;
 }
 
 ul, li {
@@ -132,10 +172,68 @@ nav li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  background-color: #d0d2d2;
-  border-radius: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 0 auto;
+}
+
+#show_profile_container{
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  gap: 2rem;
+}
+
+#follower_following_show_profile{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  gap: 0.75rem;
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+#show_profile_image img{
+  width: 100px;
+  height: 100px;
+}
+
+#show_profile_info p{
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#show_profile_username{
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding-bottom: 0.25rem;
+}
+
+#show_profile_display_name{
+  padding-bottom: 0.75rem;
+}
+
+#update_profile_button{
+  margin-top: 1rem;
+  background: #dcdbdb;
   padding: 1rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 1rem;
+  font-weight: bold;
+  border-color: #acacac;
+  border: 1px solid;
+}
+
+#post_grid{
+  max-width: 900px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 4rem;
+  gap: 2rem;
 }
 
 .post-action-link {

@@ -19,7 +19,7 @@ Description: Template that extends base.html to display detailed post informatio
         <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
     {% endfor %}
 
-    <p>{{ post.get_likes|length }} likes</p>
+    <p>{{ post.get_likes }} likes</p>
     <p>{{post.caption}}</p>
     <p>{{post.timestamp}}</p>
     <section>

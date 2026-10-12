@@ -1,0 +1,38 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+  <h1>@{{profile.username}} Feed</h1>
+  <p><a href="{% url 'show_profile' profile.pk %}">Back to profile</a></p>
+  <div class="profile_feed_container">
+    {% for post in profile.get_post_feed %}
+      <div class="profile_feed_post">
+        <div class="profile_feed_post_header">
+          <img class="profile_feed_post_header_img" src="{{post.profile.profile_image_url}}">
+          <p class="post_username">{{post.profile.username}}</p>
+          <p>• {{post.timestamp}}</p>
+        </div>
+
+        <div class="profile_feed_post_img">
+          {% for image in post.get_all_photos %}
+            <!-- Display an image only when the Photo has a URL or uploaded file. -->
+            {% if image.get_image_url %}
+              <img src ="{{image.get_image_url}}" alt= "image">
+            {% endif %}
+            {% empty %}
+              <!-- The empty branch runs when this post has no Photo records. -->
+              <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
+          {% endfor %}
+        </div>
+        <p>♥ {{post.get_likes}}</p>
+        <p><strong>{{post.profile.username}}</strong> {{post.caption}}</p>
+        
+        <h2>Comments</h2>
+        {% for comment in post.get_all_comments %}
+          <p><strong>@{{ comment.profile.username }}</strong> {{ comment.text }}</p>
+        {% empty %}
+          <p>No comments yet.</p>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

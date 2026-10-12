@@ -44,6 +44,12 @@ class PostDetailView(DetailView):
   model = Post
   template_name = 'mini_insta/show_post.html'
   context_object_name = 'post'
+
+  def get_context_data(self, **kwargs):
+    """Add the post owner's profile for navigation links."""
+    context = super().get_context_data(**kwargs)
+    context['profile'] = self.object.profile
+    return context
   
 class CreatePostView(CreateView):
   """Create a post and its related photo for a selected profile."""
@@ -134,3 +140,8 @@ class UpdatePostView(UpdateView):
   def get_success_url(self):
     """Return to the post detail page after updating."""
     return reverse('show_post', kwargs={'pk': self.object.pk})
+  
+class ShowFeedView(DetailView):
+  model = Profile
+  template_name = "mini_insta/show_feed.html"
+  context_object_name = 'profile'

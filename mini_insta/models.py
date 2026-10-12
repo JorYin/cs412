@@ -41,8 +41,21 @@ class Profile(models.Model):
         return Follow.objects.filter(follower_profile=self)
 
     def get_absolute_url(self):
-        '''Return the URL to display one instance of this model.'''
+        """Return the URL to display one instance of this model."""
         return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    def get_post_feed(self):
+        """"""
+        following = self.get_following()
+        posts = []
+
+        for follow in following:
+            profile_posts = Post.objects.filter(profile=follow.profile)
+
+            for post in profile_posts:
+                posts.append(post)
+
+        return sorted(posts, key=lambda post: post.timestamp, reverse=True)
     
 class Post(models.Model):
     """Represent a post created by an Instagram user profile."""
@@ -69,7 +82,7 @@ class Post(models.Model):
 
     def get_likes(self):
         """Return all likes associated with this post."""
-        return Like.objects.filter(post=self)
+        return Like.objects.filter(post=self).count()
 
 class Photo(models.Model):
     """Represent a photo associated with an Instagram post."""
