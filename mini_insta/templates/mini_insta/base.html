@@ -20,11 +20,18 @@ Description: Master base HTML template providing core structure, CSS styling, an
                         <li><a href="{% url 'show_feed_view' %}">Home</a></li>
                         <li><a href="{% url 'search_view' %}">Search</a></li>
                         <li><a href="{% url 'create_post' %}">Create Post</a></li>
-                        <li><a href="{% url 'my_profile' %}">Profile</a></li>
                     {% endif %}
                     {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'my_profile' %}">Profile</a></li>
                         Logged in user: {{ request.user }}.
+                        <li>
+                            <form method="post" action="{% url 'mini_insta_logout' %}">
+                                {% csrf_token %}
+                                <button type="submit">Logout</button>
+                            </form>
+                        </li>
                         {% else %}
+                        <li><a href="{% url 'mini_insta_login' %}">Login</a></li>
                         Not logged in.
                     {% endif %}
                 </ul>
