@@ -31,7 +31,12 @@ Description: Master base HTML template providing core structure, CSS styling, an
                             </form>
                         </li>
                         {% else %}
-                        <li><a href="{% url 'mini_insta_login' %}">Login</a></li>
+                        <li>
+                            <a href="{% url 'create_profile' %}">Create Profile</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'mini_insta_login' %}">Login</a>
+                        </li>
                         Not logged in.
                     {% endif %}
                 </ul>

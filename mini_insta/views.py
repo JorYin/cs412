@@ -6,11 +6,13 @@ from django.shortcuts import render
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Profile, Post, Photo
-from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 
 # Auth
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 class ProfileListView(ListView):
   """Display all Instagram user profiles in the database."""
@@ -250,3 +252,30 @@ class SearchView(LoginRequiredMixin, ListView):
     )
 
     return context
+  
+class CreateProfileView(CreateView):
+  """Create a Django User and its associated Profile."""
+
+  model = Profile
+  form_class = CreateProfileForm
+  template_name = 'mini_insta/create_profile_form.html'
+
+  def get_context_data(self, **kwargs):
+    """Add the UserCreationForm to the profile form context."""
+    context = super().get_context_data(**kwargs)
+    context['user_form'] = UserCreationForm()
+    return context
+  
+  def form_valid(self, form):
+    """Create the User, log them in, and attach them to the Profile."""
+    user_form = UserCreationForm(self.request.POST)
+
+    # Should there be validation?
+
+    user = user_form.save()
+
+    login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+    form.instance.user = user
+
+    return super().form_valid(form)

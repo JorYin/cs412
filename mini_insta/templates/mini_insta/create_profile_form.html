@@ -1,0 +1,42 @@
+<!-- File: 
+Author: 
+Description: -->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+<form method='POST'>
+  {% csrf_token %}
+  <table>
+    <!-- Loop through each editable profile field and render its input. -->
+    {% for field in user_form %}
+      <tr>
+        <th>{{ field.label }}</th>
+        <td>
+          {{ field }}
+          {{ field.errors }}
+        </td>
+      </tr>
+    {% endfor %}
+
+    {% for field in form %}
+      <tr>
+        <th>{{ field.label }}</th>
+        <td>
+          {{ field }}
+          {{ field.errors }}
+        </td>
+      </tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td>
+            <input type="submit" name="create_profile" value="Create">
+        </td>
+    </tr>
+  </table>
+</form>
+<form action="{% url 'show_all_profiles' %}" method="GET">
+    <input type="submit" value="Cancel">
+</form>
+{% endblock %}

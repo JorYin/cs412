@@ -14,8 +14,10 @@
     <input type="submit" value="Login">
 </form>
 
-{% comment %} <hr>
-Don't have an account? <a href="{% url 'register' %}">Register here</a>.
-{% endcomment %}
+<hr>
+<p>
+    Don't have an account?
+    <a href="{% url 'create_profile' %}">Create a profile</a>
+</p>
 
 {% endblock %}
