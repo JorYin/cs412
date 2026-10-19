@@ -32,8 +32,10 @@ Description: Template that extends base.html to display detailed post informatio
       {% endfor %}
     </section>
     <p>
-      <a class="post-action-link update-link" href="{% url 'update_post' post.pk %}">Update Post</a>
-      <a class="post-action-link delete-link" href="{% url 'delete_post' post.pk %}">Delete Post</a>
+      {% if request.user.is_authenticated and request.user.pk == post.profile.user.pk %}
+          <a class="post-action-link update-link" href="{% url 'update_post' post.pk %}">Update Post</a>
+          <a class="post-action-link delete-link" href="{% url 'delete_post' post.pk %}">Delete Post</a>
+      {% endif %}
     </p>
   </div>
 {% endblock %}

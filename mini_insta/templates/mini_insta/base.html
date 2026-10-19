@@ -15,14 +15,17 @@ Description: Master base HTML template providing core structure, CSS styling, an
         <footer>
             <nav>
                 <ul>
-                    {% if profile %}
-                        <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
-                        <li><a href="{% url 'show_feed_view' profile.pk %}">Home</a></li>
-                        <li><a href="{% url 'search_view' profile.pk %}">Search</a></li>
-                        <li><a href="{% url 'create_post' profile.pk %}">Create Post</a></li>
-                        <li><a href="{% url 'show_profile' profile.pk %}">Profile</a></li>
-                    {% else %}
-                        <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
+                    <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
+                    {% if request.user.is_authenticated and request.user.pk == profile.user.pk %}
+                        <li><a href="{% url 'show_feed_view' %}">Home</a></li>
+                        <li><a href="{% url 'search_view' %}">Search</a></li>
+                        <li><a href="{% url 'create_post' %}">Create Post</a></li>
+                        <li><a href="{% url 'my_profile' %}">Profile</a></li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        Logged in user: {{ request.user }}.
+                        {% else %}
+                        Not logged in.
                     {% endif %}
                 </ul>
             </nav>

@@ -23,7 +23,7 @@ Description: Display the form used to update a profile. -->
     </tr>
   </table>
 </form>
-<form action="{% url 'show_profile' profile.pk %}" method='GET' >
+<form action="{% url 'my_profile' %}" method='GET' >
     <input type='submit' value="Cancel">
 </form>
 {% endblock %}

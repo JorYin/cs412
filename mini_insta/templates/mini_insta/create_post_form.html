@@ -8,7 +8,7 @@ Description: Display the HTML form used to create a new Post object. -->
 <h1>Create a new Post for @{{profile.username}}</h1>
 
 <!-- display the HTML form -->
-<form id="create_post_form" action="{% url 'create_post' profile.pk %}" method="POST" enctype="multipart/form-data" >
+<form id="create_post_form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data" >
     {% csrf_token %}
     <label for="files">Select photos:</label>
     <input type="file" name="files" multiple>
@@ -19,7 +19,7 @@ Description: Display the HTML form used to create a new Post object. -->
     <input type="url" id="image_url" name="image_url"> {% endcomment %}
     <div id="create_post_buttons">
       <input type="submit" name="submit" value="Submit">
-      <a href="{% url 'show_profile' profile.pk %}">Cancel</a>
+      <a href="{% url 'my_profile' %}">Cancel</a>
     </div>
 </form>
 {% endblock %}

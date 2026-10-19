@@ -9,13 +9,23 @@ Description: Template that extends base.html to display a grid of all registered
 <main class="grid-container">
   <!-- Loop through all profiles and link each one to its detail page. -->
     {% for p in profiles %}
-    <a href="{% url 'show_profile' p.pk %}">
-      <div id="show_all_profile_container">
-          <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
-          <p id="show_all_username">@{{p.username}}</p>
-          <p>{{p.display_name}}</p>
-      </div>
-    </a>
+      {% if request.user.is_authenticated and request.user.pk == p.user.pk %}
+        <a href="{% url 'my_profile' %}">
+          <div id="show_all_profile_container">
+              <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
+              <p id="show_all_username">@{{p.username}}</p>
+              <p>{{p.display_name}}</p>
+          </div>
+        </a>
+      {% else %}
+        <a href="{% url 'show_profile' p.pk %}">
+          <div id="show_all_profile_container">
+              <img src="{{p.profile_image_url}}" alt="{{p.profile_image_url}}">
+              <p id="show_all_username">@{{p.username}}</p>
+              <p>{{p.display_name}}</p>
+          </div>
+        </a>
+      {% endif %}
     {% endfor %}
 </main>
 {% endblock %}

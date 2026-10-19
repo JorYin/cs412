@@ -9,6 +9,9 @@ from .models import Profile, Post, Photo
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from django.urls import reverse
 
+# Auth
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 class ProfileListView(ListView):
   """Display all Instagram user profiles in the database."""
   
@@ -24,6 +27,21 @@ class ProfileDetailView(DetailView):
   model = Profile
   template_name = 'mini_insta/show_profile.html'
   context_object_name = 'profile'
+  
+class ProfileDetailViewAuth(LoginRequiredMixin, DetailView):
+  """Display detailed information for one user profile."""
+  
+  model = Profile
+  template_name = 'mini_insta/show_profile.html'
+  context_object_name = 'profile'
+
+  def get_login_url(self):
+    """Return the URL for the Mini Insta login page."""
+    return reverse('mini_insta_login')
+
+  def get_object(self):
+    """Return the profile associated with the currently logged-in user."""
+    return Profile.objects.get(user=self.request.user)
 
 class ShowFollowersDetailView(DetailView):
   """Display the profiles following a selected profile."""
@@ -52,11 +70,15 @@ class PostDetailView(DetailView):
     context['profile'] = self.object.profile
     return context
   
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
   """Create a post and its related photo for a selected profile."""
   
   form_class = CreatePostForm
   template_name = 'mini_insta/create_post_form.html'
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
   
   def get_context_data(self):
     """Add the profile associated with the create-post URL to the context."""
@@ -65,8 +87,7 @@ class CreatePostView(CreateView):
     context = super().get_context_data()
     
     # Use the profile primary key supplied by the URL to find the owner.
-    pk = self.kwargs['pk']
-    profile = Profile.objects.get(pk=pk)
+    profile = Profile.objects.get(user=self.request.user)
     
     # Make the profile available to the form template and its URL tags.
     context['profile'] = profile
@@ -79,8 +100,7 @@ class CreatePostView(CreateView):
     image_files = self.request.FILES.getlist('files')
     
     # Find the profile identified by the primary key in the URL.
-    pk = self.kwargs['pk']
-    profile = Profile.objects.get(pk=pk)
+    profile = Profile.objects.get(user=self.request.user)
     
     # Set the profile before CreateView saves the Post.
     form.instance.profile = profile
@@ -103,23 +123,36 @@ class CreatePostView(CreateView):
     # Reverse the post detail route using the saved post's primary key.
     return reverse('show_post', kwargs={'pk': self.object.pk})
   
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
   """Display and process the form used to update a Profile."""
   
   model = Profile
   form_class = UpdateProfileForm
   template_name = "mini_insta/update_profile_form.html"
   
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login')
+  
+  def get_object(self):
+    """Return the profile associated with the currently logged-in user."""
+    return Profile.objects.get(user=self.request.user)
+  
   def form_valid(self, form):
       """Save a valid profile update."""
       return super().form_valid(form)
     
-class DeletePostView(DeleteView):
+# Post delete ownership question
+class DeletePostView(LoginRequiredMixin, DeleteView):
   """Confirm and delete a post."""
 
   template_name = "mini_insta/delete_post_form.html"
   model = Post
   context_object_name = 'post'
+  
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
 
   def get_context_data(self, **kwargs):
     """Add the post owner's profile to the delete confirmation context."""
@@ -132,36 +165,56 @@ class DeletePostView(DeleteView):
     """Return to the profile that owned the deleted post."""
     return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
 
-class UpdatePostView(UpdateView):
+# Post update ownership question
+class UpdatePostView(LoginRequiredMixin, UpdateView):
   """Update an existing post."""
   
   model = Post
   form_class = UpdatePostForm
   template_name = "mini_insta/update_post_form.html"
   context_object_name = 'post'
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
   
   def get_success_url(self):
     """Return to the post detail page after updating."""
     return reverse('show_post', kwargs={'pk': self.object.pk})
   
-class ShowFeedView(DetailView):
+class ShowFeedView(LoginRequiredMixin, DetailView):
   """Display the personalized post feed for a Profile."""
   
   model = Profile
   template_name = "mini_insta/show_feed.html"
   context_object_name = 'profile'
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
   
-class SearchView(ListView):
+  def get_object(self):
+    """Return the profile associated with the currently logged-in user."""
+    return Profile.objects.get(user=self.request.user)
+  
+class SearchView(LoginRequiredMixin, ListView):
   """Search post captions and profile information."""
   
   model = Post
   template_name = 'mini_insta/search_results.html'
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
   
+  def get_object(self):
+    """Return the profile associated with the currently logged-in user."""
+    return Profile.objects.get(user=self.request.user)
+    
   def dispatch(self, request, *args, **kwargs):
     """Display the search form until a query is submitted."""
     
-    pk = self.kwargs['pk']
-    profile = Profile.objects.get(pk=pk)
+    profile = Profile.objects.get(user=self.request.user)
     query = request.GET.get('query')
 
     if query is None:
@@ -184,8 +237,7 @@ class SearchView(ListView):
     
     context = super().get_context_data(**kwargs)
     
-    pk = self.kwargs['pk']
-    profile = Profile.objects.get(pk=pk)
+    profile = Profile.objects.get(user=self.request.user)
     query = self.request.GET.get('query').strip()
     
     context['profile'] = profile
