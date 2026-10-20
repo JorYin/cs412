@@ -8,7 +8,7 @@ Description: Display posts from profiles followed by the selected profile. -->
   <h1>@{{profile.username}} Feed</h1>
   <p><a href="{% url 'show_profile' profile.pk %}">Back to profile</a></p>
   <div class="profile_feed_container">
-    <!-- Loop through the selected profile's personalized feed. -->
+    <!-- Render each post from a profile followed by the logged-in user. -->
     {% for post in profile.get_post_feed %}
       <div class="profile_feed_post">
         <div class="profile_feed_post_header">
@@ -29,7 +29,28 @@ Description: Display posts from profiles followed by the selected profile. -->
               <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
           {% endfor %}
         </div>
-        <p>♥ {{post.get_likes}}</p>
+        <div id="likes-container">
+          <p>{{ post.get_likes }} likes</p>
+
+          <!-- Compare each post against the logged-in user's liked-post ID list. -->
+          {% if request.user.is_authenticated and request.user.pk != post.profile.user.pk %}
+            {% if post.pk in liked_post_ids %}
+              <form class="liked-form" method="POST" action="{% url 'delete_like' post.pk %}">
+                {% csrf_token %}
+                <button class="liked-btns" type="submit">Delete Like</button>
+              </form>
+            {% else %}
+              <form class="liked-form" method="POST" action="{% url 'like_post' post.pk %}">
+                {% csrf_token %}
+                <button class="liked-btns" type="submit">Like</button>
+              </form>
+            {% endif %}
+          {% else %}
+            <button class="liked-btns" type="button" disabled>
+              You can't like your own post
+            </button>
+          {% endif %}
+        </div>
         <p><strong>{{post.profile.username}}</strong> {{post.caption}}</p>
         
         <h2>Comments</h2>

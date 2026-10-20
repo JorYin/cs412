@@ -1,6 +1,6 @@
-<!-- File: 
-Author: 
-Description: -->
+<!-- File: create_profile_form.html
+Author: Jordan Yin (jordany@bu.edu), 10/20/2026
+Description: Display the account and profile forms used to register a new user. -->
 
 {% extends 'mini_insta/base.html' %}
 
@@ -8,7 +8,7 @@ Description: -->
 <form method='POST'>
   {% csrf_token %}
   <table>
-    <!-- Loop through each editable profile field and render its input. -->
+    <!-- Display the account fields needed to create the Django User. -->
     {% for field in user_form %}
       <tr>
         <th>{{ field.label }}</th>
@@ -19,6 +19,7 @@ Description: -->
       </tr>
     {% endfor %}
 
+    <!-- Display the profile fields that will be linked to the new User. -->
     {% for field in form %}
       <tr>
         <th>{{ field.label }}</th>

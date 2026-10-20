@@ -216,6 +216,27 @@ nav li {
   padding-bottom: 1rem;
 }
 
+#likes-container{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.liked-btns{
+  margin-top: 1rem;
+  background: #dcdbdb;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 1rem;
+  font-weight: bold;
+  border-color: #acacac;
+  border: 1px solid;
+}
+
 #show_profile_image img{
   width: 100px;
   height: 100px;
@@ -234,6 +255,40 @@ nav li {
 
 #show_profile_display_name{
   padding-bottom: 0.75rem;
+}
+
+#show_post{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 0 auto;
+}
+
+.follow-form{
+  width: 100%;
+}
+
+.liked-form{
+  width: 25%;
+}
+
+.follow-btns{
+  margin-top: 1rem;
+  background: #dcdbdb;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 1rem;
+  font-weight: bold;
+  border-color: #acacac;
+  border: 1px solid;
+}
+
+.search-result-profile{
+  padding: 0.5rem;
 }
 
 #update_profile_button{

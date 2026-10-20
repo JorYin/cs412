@@ -3,9 +3,9 @@
 # Description: Class-based views for the mini_insta app to list all Instagram user profiles and view individual profile details.
 
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Q
-from .models import Profile, Post, Photo
+from .models import *
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 
@@ -29,6 +29,21 @@ class ProfileDetailView(DetailView):
   model = Profile
   template_name = 'mini_insta/show_profile.html'
   context_object_name = 'profile'
+
+  def get_context_data(self, **kwargs):
+    """Add whether the logged-in profile follows the displayed profile."""
+    context = super().get_context_data(**kwargs)
+    context['is_following'] = False
+
+    if self.request.user.is_authenticated:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+
+      context['is_following'] = Follow.objects.filter(
+        profile=self.object,
+        follower_profile=logged_in_profile
+      ).exists()
+
+    return context
   
 class ProfileDetailViewAuth(LoginRequiredMixin, DetailView):
   """Display detailed information for one user profile."""
@@ -67,9 +82,23 @@ class PostDetailView(DetailView):
   context_object_name = 'post'
 
   def get_context_data(self, **kwargs):
-    """Add the post owner's profile for navigation links."""
+    """Add the post owner and the logged-in user's like status."""
     context = super().get_context_data(**kwargs)
     context['profile'] = self.object.profile
+    
+    # Start with no like so logged-out visitors cannot see an active like state.
+    context['is_liked'] = False
+
+    # Check the relationship only when a Django user is authenticated.
+    if self.request.user.is_authenticated:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+
+      # Match both the displayed post and the logged-in profile.
+      context['is_liked'] = Like.objects.filter(
+        post=self.object,
+        profile=logged_in_profile
+      ).exists()
+      
     return context
   
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -198,6 +227,21 @@ class ShowFeedView(LoginRequiredMixin, DetailView):
   def get_object(self):
     """Return the profile associated with the currently logged-in user."""
     return Profile.objects.get(user=self.request.user)
+
+  def get_context_data(self, **kwargs):
+    """Add the IDs of posts liked by the logged-in profile."""
+    context = super().get_context_data(**kwargs)
+
+    # Find the profile that owns the current authenticated session.
+    if self.request.user.is_authenticated:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+
+    # Use post IDs so the template can determine each feed post's like state.
+    context['liked_post_ids'] = Like.objects.filter(
+      profile=logged_in_profile
+    ).values_list('post_id', flat=True)
+      
+    return context
   
 class SearchView(LoginRequiredMixin, ListView):
   """Search post captions and profile information."""
@@ -279,3 +323,141 @@ class CreateProfileView(CreateView):
     form.instance.user = user
 
     return super().form_valid(form)
+  
+class FollowProfileView(LoginRequiredMixin, TemplateView):
+  """Create a Follow relationship with another profile."""
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
+  
+  def dispatch(self, request, *args, **kwargs):
+    """Create a follow relationship for a POST request."""
+    
+    # Identify the profile performing the action and the target profile.
+    if request.POST:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+      pk = self.kwargs['pk']
+      target_profile = Profile.objects.get(pk=pk)
+      
+      # Prevent a profile from creating a relationship with itself.
+      if logged_in_profile != target_profile:
+        # Reuse an existing relationship instead of creating duplicates.
+        Follow.objects.get_or_create(
+          profile=target_profile,
+          follower_profile=logged_in_profile
+      )
+      
+      return render(
+        request,
+        'mini_insta/show_profile.html',
+        {
+            'profile': target_profile,
+            'is_following': True,
+        }
+      )
+      
+    return super().dispatch(request, *args, **kwargs)
+
+class DeleteFollowView(LoginRequiredMixin, TemplateView):
+  """Delete a Follow relationship with another profile."""
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
+
+  def dispatch(self, request, *args, **kwargs):
+    """Delete a follow relationship for a POST request."""
+    
+    # Identify the profile performing the action and the target profile.
+    if request.POST:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+      pk = self.kwargs['pk']
+      target_profile = Profile.objects.get(pk=pk)
+      
+      # Delete only the relationship between these two specific profiles.
+      Follow.objects.filter(
+          profile=target_profile,
+          follower_profile=logged_in_profile
+      ).delete()
+      
+      return render(
+        request,
+        'mini_insta/show_profile.html',
+        {
+            'profile': target_profile,
+            'is_following': False,
+        }
+      )
+      
+    return super().dispatch(request, *args, **kwargs)
+  
+class LikePostView(LoginRequiredMixin, TemplateView):
+  """Create a Like for another profile's post."""
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login')
+  
+  def dispatch(self, request, *args, **kwargs):
+    """Create a like relationship for a POST request."""
+    
+    # Identify the profile performing the action and the target post.
+    if request.POST:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+      pk = self.kwargs['pk']
+      target_post = Post.objects.get(pk=pk)
+      
+      # Prevent a profile from liking a post it owns.
+      if logged_in_profile != target_post.profile:
+        # Reuse an existing like instead of creating duplicates.
+        Like.objects.get_or_create(
+            post=target_post,
+            profile=logged_in_profile
+        )
+      
+      return render(
+          request,
+          'mini_insta/show_post.html',
+          {
+              'post': target_post,
+              'profile': target_post.profile,
+              'is_liked': True,
+          }
+      )
+      
+    return super().dispatch(request, *args, **kwargs)
+
+class DeleteLikeView(LoginRequiredMixin, TemplateView):
+  """Delete a Like from another profile's post."""
+
+  def get_login_url(self) -> str:
+    """return the URL required for login"""
+    return reverse('mini_insta_login') 
+
+  def dispatch(self, request, *args, **kwargs):
+    """Delete a like relationship for a POST request."""
+    
+    # Identify the profile performing the action and the target post.
+    if request.POST:
+      logged_in_profile = Profile.objects.get(user=self.request.user)
+      pk = self.kwargs['pk']
+      target_post = Post.objects.get(pk=pk)
+      
+      # Delete only the like belonging to this profile and post.
+      Like.objects.filter(
+          post=target_post,
+          profile=logged_in_profile
+      ).delete()
+
+    return render(
+        request,
+        'mini_insta/show_post.html',
+        {
+            'post': target_post,
+            'profile': target_post.profile,
+            'is_liked': False,
+        }
+    )
+      
+    return super().dispatch(request, *args, **kwargs)

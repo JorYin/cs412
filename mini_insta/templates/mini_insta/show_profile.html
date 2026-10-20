@@ -26,13 +26,32 @@ Description: Template that extends base.html to display detailed profile informa
         {% comment %} <p>{{profile.join_date}}</p> {% endcomment %}
       </div>
     </div>
+    <!-- Only the profile owner can edit this profile. -->
     {% if request.user.is_authenticated and request.user.pk == profile.user.pk %}
       <a id="update_profile_button" href="{% url 'update_profile' %}">Update Profile</a>
+    {% endif %}
+
+    <!-- Allow authenticated users to follow other profiles, but never themselves. -->
+    {% if request.user.is_authenticated and request.user.pk != profile.user.pk %}
+      <!-- Switch between Follow and Unfollow using the relationship state from the view. -->
+      {% if is_following %}
+        <form class="follow-form" method="POST" action="{% url 'delete_follow' profile.pk %}">
+          {% csrf_token %}
+          <button class="follow-btns" type="submit">Unfollow</button>
+        </form>
+      {% else %}
+        <form class="follow-form" method="POST" action="{% url 'follow_profile' profile.pk %}">
+          {% csrf_token %}
+          <button class="follow-btns" type="submit">Follow</button>
+        </form>
+      {% endif %}
+      {% else %}
+        <button class="follow-btns" type="button" disabled>Can't follow yourself</button>
     {% endif %}
   </div>
 
   <div id="post_grid">
-      <!-- Loop through this profile's posts and make each post clickable. -->
+      <!-- Render each post as a clickable tile and select its first available image. -->
       {% for post in profile.get_all_posts %}
         <div id="post_tile">
           <a href="{% url 'show_post' post.pk %}"> 

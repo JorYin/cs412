@@ -12,14 +12,33 @@ Description: Template that extends base.html to display detailed post informatio
     {% for image in post.get_all_photos %}
       <!-- Display an image only when the Photo has a URL or uploaded file. -->
       {% if image.get_image_url %}
-        <img src ="{{image.get_image_url}}" alt= "image">
+        <img class="post_img" src ="{{image.get_image_url}}" alt= "image">
       {% endif %}
       {% empty %}
         <!-- The empty branch runs when this post has no Photo records. -->
-        <img src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
+        <img class="post_img" src ="https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg?semt=ais_hybrid&w=740&q=80" alt="No photo">
     {% endfor %}
 
-    <p>{{ post.get_likes }} likes</p>
+    <div id="likes-container">
+      <p>{{ post.get_likes }} likes</p>
+      <!-- Only another authenticated profile may like this post. -->
+      {% if request.user.is_authenticated and request.user.pk != profile.user.pk %}
+        <!-- Switch between Like and Delete Like using the state calculated by the view. -->
+        {% if is_liked %}
+          <form class="liked-form" method="POST" action="{% url 'delete_like' post.pk %}">
+            {% csrf_token %}
+            <button class="liked-btns" type="submit">Delete Like</button>
+          </form>
+        {% else %}
+          <form class="liked-form" method="POST" action="{% url 'like_post' post.pk %}">
+            {% csrf_token %}
+            <button class="liked-btns" type="submit">Like</button>
+          </form>
+        {% endif %}
+        {% else %}
+          <button class="liked-btns" type="button" disabled>You can't like your own post</button>
+      {% endif %}
+    </div>
     <p>{{post.caption}}</p>
     <p>{{post.timestamp}}</p>
     <section>

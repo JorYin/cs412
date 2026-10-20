@@ -12,12 +12,16 @@ Description: Display matching profiles and posts for a submitted search. -->
     <h2>Profiles</h2>
     <!-- Loop through profiles whose username, display name, or bio matches. -->
     {% for result_profile in profiles %}
-      <div>
-        <a href="{% url 'show_profile' result_profile.pk %}">
-          <strong>@{{ result_profile.username }}</strong>
-        </a>
-        <p>{{ result_profile.display_name }}</p>
-        <p>{{ result_profile.bio_text }}</p>
+      <div class="search-result-profile">
+        <div class="profile_feed_post_header">
+          <img class="profile_feed_post_header_img"
+                src="{{ result_profile.profile_image_url }}"
+                alt="{{ result_profile.username }}">
+          <a class="post_username"
+              href="{% url 'show_profile' result_profile.pk %}">
+            @{{ result_profile.username }}
+          </a>
+        </div>
       </div>
     {% empty %}
       <p>No profiles found.</p>

@@ -31,7 +31,7 @@ class UpdatePostForm(forms.ModelForm):
     fields = ['caption']
     
 class CreateProfileForm(forms.ModelForm):
-  """A form to handle creating a Profile"""
+  """Collect the fields needed to create a Profile."""
 
   class Meta:
     """Associate this form with the Profile model; select fields."""
