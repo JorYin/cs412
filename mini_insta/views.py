@@ -185,6 +185,20 @@ class DeletePostView(LoginRequiredMixin, DeleteView):
     """return the URL required for login"""
     return reverse('mini_insta_login') 
 
+  def dispatch(self, request, *args, **kwargs):
+    """Redirect non-owners to the post detail page."""
+    if request.user.is_authenticated:
+      pk = self.kwargs['pk']
+      post = Post.objects.filter(pk=pk).first()
+      if post and post.profile.user.pk != request.user.pk:
+        return render(
+          request,
+          'mini_insta/show_post.html',
+          {'post': post}
+        )
+
+    return super().dispatch(request, *args, **kwargs)
+
   def get_context_data(self, **kwargs):
     """Add the post owner's profile to the delete confirmation context."""
     
@@ -208,6 +222,20 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
   def get_login_url(self) -> str:
     """return the URL required for login"""
     return reverse('mini_insta_login') 
+
+  def dispatch(self, request, *args, **kwargs):
+    """Redirect non-owners to the post detail page."""
+    if request.user.is_authenticated:
+      pk = self.kwargs['pk']
+      post = Post.objects.filter(pk=pk).first()
+      if post and post.profile.user.pk != request.user.pk:
+        return render(
+          request,
+          'mini_insta/show_post.html',
+          {'post': post}
+        )
+
+    return super().dispatch(request, *args, **kwargs)
   
   def get_success_url(self):
     """Return to the post detail page after updating."""
@@ -307,14 +335,19 @@ class CreateProfileView(CreateView):
   def get_context_data(self, **kwargs):
     """Add the UserCreationForm to the profile form context."""
     context = super().get_context_data(**kwargs)
-    context['user_form'] = UserCreationForm()
+    context['user_form'] = getattr(
+      self,
+      'user_form',
+      UserCreationForm(self.request.POST or None)
+    )
     return context
   
   def form_valid(self, form):
     """Create the User, log them in, and attach them to the Profile."""
     user_form = UserCreationForm(self.request.POST)
 
-    # Should there be validation?
+    if not user_form.is_valid():
+      return self.form_invalid(form)
 
     user = user_form.save()
 
@@ -450,14 +483,14 @@ class DeleteLikeView(LoginRequiredMixin, TemplateView):
           profile=logged_in_profile
       ).delete()
 
-    return render(
-        request,
-        'mini_insta/show_post.html',
-        {
-            'post': target_post,
-            'profile': target_post.profile,
-            'is_liked': False,
-        }
-    )
+      return render(
+          request,
+          'mini_insta/show_post.html',
+          {
+              'post': target_post,
+              'profile': target_post.profile,
+              'is_liked': False,
+          }
+      )
       
     return super().dispatch(request, *args, **kwargs)

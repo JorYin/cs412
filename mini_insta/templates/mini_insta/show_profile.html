@@ -45,8 +45,8 @@ Description: Template that extends base.html to display detailed profile informa
           <button class="follow-btns" type="submit">Follow</button>
         </form>
       {% endif %}
-      {% else %}
-        <button class="follow-btns" type="button" disabled>Can't follow yourself</button>
+    {% elif request.user.is_authenticated and request.user.pk == profile.user.pk %}
+      <button class="follow-btns" type="button" disabled>Can't follow yourself</button>
     {% endif %}
   </div>
 

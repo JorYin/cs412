@@ -45,7 +45,7 @@ Description: Display posts from profiles followed by the selected profile. -->
                 <button class="liked-btns" type="submit">Like</button>
               </form>
             {% endif %}
-          {% else %}
+          {% elif request.user.is_authenticated and request.user.pk == post.profile.user.pk%}
             <button class="liked-btns" type="button" disabled>
               You can't like your own post
             </button>
