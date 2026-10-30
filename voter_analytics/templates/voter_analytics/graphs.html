@@ -1,0 +1,21 @@
+<!-- File: graphs.html
+Author: Jordan Yin (jordany@bu.edu), 10/30/2026
+Description: Template displaying filtered voter aggregate graphs for birth years, party affiliation, and election participation. -->
+
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Voter Graphs</h1>
+    {% include "voter_analytics/search.html" %}
+
+    <h2>Voters by Year of Birth</h2>
+    {{ graph_dob|safe }}
+
+    <h2>Voters by Party Affiliation</h2>
+    {{ graph_party|safe }}
+
+    <h2>Election Participation</h2>
+    {{ graph_elections|safe }}
+</div>
+{% endblock %}

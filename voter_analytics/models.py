@@ -1,10 +1,11 @@
+# File: models.py
+# Author: Jordan Yin (jordany@bu.edu), 10/30/2026
+# Description: Database models and CSV data-loading functionality for voter analytics.
+
 from django.db import models
 
-# Create your models here.
 class Voter(models.Model):
-    '''
-
-    '''
+    """Represent a registered Newton voter and their election history."""
     # name
     first_name = models.TextField()
     last_name = models.TextField()
@@ -30,11 +31,11 @@ class Voter(models.Model):
     voter_score = models.IntegerField()
  
     def __str__(self):
-        '''Return a string representation of this model instance.'''
+        """Return the voter's name."""
         return f'{self.first_name} {self.last_name}'
       
 def load_data():
-  '''Function to load data records from CSV file into Django model instances.'''
+  """Load voter records from the CSV file into the database."""
 
   # delete existing records to prevent duplicates:
   Voter.objects.all().delete()

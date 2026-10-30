@@ -1,0 +1,82 @@
+<!-- File: search.html
+Author: Jordan Yin (jordany@bu.edu), 10/30/2026
+Description: Reusable voter filtering form for party affiliation, birth year, voter score, and election participation. -->
+
+<form method="get" action="{% url form_action %}">
+    <table>
+        <tr>
+            <th><label for="party">SELECT PARTY AFFILIATION:</label></th>
+            <td>
+                <select name="party" id="party">
+                    <option value="">Choose</option>
+                    {% for party in parties %}
+                        <option value="{{ party }}"
+                            {% if request.GET.party == party %}selected{% endif %}>
+                            {{ party|cut:" " }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="voter_score">SELECT VOTER SCORE:</label></th>
+            <td>
+                <select name="voter_score" id="voter_score">
+                    <option value="">Choose</option>
+                    {% for score in scores %}
+                        <option value="{{ score }}"
+                            {% if request.GET.voter_score == score|stringformat:"s" %}selected{% endif %}>
+                            {{ score }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="min_year">MIN YEAR OF BIRTH:</label></th>
+            <td>
+                <select name="min_year" id="min_year">
+                    <option value="">Choose</option>
+                    {% for year in years %}
+                        <option value="{{ year }}"
+                            {% if request.GET.min_year == year|stringformat:"s" %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="max_year">MAX YEAR OF BIRTH:</label></th>
+            <td>
+                <select name="max_year" id="max_year">
+                    <option value="">Choose</option>
+                    {% for year in years %}
+                        <option value="{{ year }}"
+                            {% if request.GET.max_year == year|stringformat:"s" %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>PREVIOUS ELECTION PARTICIPATION</th>
+            <td>
+                <label><input type="checkbox" name="v20state"
+                    {% if request.GET.v20state %}checked{% endif %}> v20state</label><br>
+                <label><input type="checkbox" name="v21town"
+                    {% if request.GET.v21town %}checked{% endif %}> v21town</label><br>
+                <label><input type="checkbox" name="v21primary"
+                    {% if request.GET.v21primary %}checked{% endif %}> v21primary</label><br>
+                <label><input type="checkbox" name="v22general"
+                    {% if request.GET.v22general %}checked{% endif %}> v22general</label><br>
+                <label><input type="checkbox" name="v23town"
+                    {% if request.GET.v23town %}checked{% endif %}> v23town</label>
+            </td>
+        </tr>
+    </table>
+
+    <button type="submit">Submit</button>
+    <a href="{% url 'voters' %}"><button type="button">Cancel</button></a>
+</form>

@@ -1,0 +1,26 @@
+<!-- File: base.html
+Author: Jordan Yin (jordany@bu.edu), 10/30/2026
+Description: Master base HTML template providing the shared structure, styling, and navigation for the voter_analytics app. -->
+
+{% load static %}
+<html>
+    <head>
+        <title>Voter Analytics</title>
+        <link rel="stylesheet" href="{% static 'voter_analytics.css' %}">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'voters' %}">Home</a></li>
+                    <li><a href="{% url 'voter_list' %}">Show Voter List</a></li>
+                    <li><a href="{% url 'graphs' %}">Show Graphs</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+    {% block content %}
+    {% endblock %}    
+  
+    </body>
+</html>
