@@ -13,6 +13,21 @@ from django.contrib.auth.forms import UserCreationForm ## NEW
 from django.contrib.auth.models import User ## NEW
 from django.contrib.auth import login # NEW
 
+from rest_framework import generics
+from .serializers import *
+ 
+class ArticleListAPIView(generics.ListCreateAPIView):
+    '''
+    An API view to return a listing of Articles 
+    and to create an Article.
+    '''
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+ 
+class ArticleDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
 class ShowAllView(ListView):
     '''Create a subclass of ListView to display all blog articles.'''
     model = Article # retrieve objects of type Article from the database

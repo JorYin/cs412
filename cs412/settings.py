@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'mini_insta',
     'marathon_analytics',
     'voter_analytics',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,9 @@ CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
 if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/jordany/static/'
     MEDIA_URL = '/jordany/media/'
+    
+## at the bottom of the file:
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
