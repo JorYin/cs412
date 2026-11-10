@@ -8,7 +8,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = Article
-        fields = ['id', 'title', 'author', 'text', 'published', 'image_file']
+        fields = ['id', 'title', 'author', 'text', 'published', 'image_url']
     
     # add methods to customize the Create/Read/Update/Delete operations
     def create(self, validated_data):
