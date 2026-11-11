@@ -1,0 +1,19 @@
+<!-- File: pictures.html -->
+<!-- Author: Jordan Yin (jordany@bu.edu), 11/10/2026 -->
+<!-- Description: Displays a list of all pictures. -->
+
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+<div>
+    <h1>All Pictures</h1>
+    {% for picture in pictures %}
+        <a href="{% url 'picture_by_pk' picture.pk %}">
+            <img src="{{ picture.image_url }}" alt="Silly picture">
+        </a>
+        <p>By {{ picture.contributor }}</p>
+    {% empty %}
+        <p>No pictures found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

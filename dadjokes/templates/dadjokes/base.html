@@ -1,0 +1,26 @@
+<!-- File: base.html -->
+<!-- Author: Jordan Yin (jordany@bu.edu), 11/10/2026 -->
+<!-- Description: Shared layout and navigation for Dad Jokes pages. -->
+
+<html>
+    <head>
+        <title>Dad Jokes</title>
+    </head>
+    <body>
+        <header>
+            <h1>Dad Jokes</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'one_joke' %}">Home</a></li>
+                    <li><a href="{% url 'random_joke_and_picture' %}">Random</a></li>
+                    <li><a href="{% url 'jokes_no_picture' %}">All Jokes</a></li>
+                    <li><a href="{% url 'pictures_no_jokes' %}">All Pictures</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+    {% block content %}
+    {% endblock %}    
+  
+    </body>
+</html>

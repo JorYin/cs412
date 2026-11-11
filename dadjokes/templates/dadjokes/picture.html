@@ -1,0 +1,12 @@
+<!-- File: picture.html -->
+<!-- Author: Jordan Yin (jordany@bu.edu), 11/10/2026 -->
+<!-- Description: Displays one picture selected by primary key. -->
+
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+<div>
+    <img src="{{ picture.image_url }}" alt="Silly picture">
+    <p>By {{ picture.contributor }}</p>
+</div>
+{% endblock %}

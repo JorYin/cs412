@@ -1,0 +1,17 @@
+<!-- File: jokes.html -->
+<!-- Author: Jordan Yin (jordany@bu.edu), 11/10/2026 -->
+<!-- Description: Displays a list of all jokes. -->
+
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+<div>
+    <h1>All Jokes</h1>
+    {% for joke in jokes %}
+        <p><a href="{% url 'joke_by_pk' joke.pk %}">{{ joke.joke }}</a></p>
+        <p>By {{ joke.contributor }}</p>
+    {% empty %}
+        <p>No jokes found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

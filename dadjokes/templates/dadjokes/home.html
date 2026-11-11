@@ -1,0 +1,13 @@
+<!-- File: home.html -->
+<!-- Author: Jordan Yin (jordany@bu.edu), 11/10/2026 -->
+<!-- Description: Displays one randomly selected joke and picture. -->
+
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+<div>
+    <img src="{{ picture.image_url }}" alt="Silly picture">
+    <h1>{{ joke.joke }}</h1>
+    <p>By {{ joke.contributor }}</p>
+</div>
+{% endblock %}
