@@ -96,6 +96,93 @@ export const styles = StyleSheet.create({
   postImagePlaceholder: {
     backgroundColor: '#eee',
   },
+  label: {
+    alignSelf: 'stretch',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  captionInput: {
+    alignSelf: 'stretch',
+    borderColor: '#999',
+    borderRadius: 8,
+    borderWidth: 1,
+    minHeight: 100,
+    padding: 12,
+    marginBottom: 20,
+  },
+  imageUrlsInput: {
+    alignSelf: 'stretch',
+    borderColor: '#999',
+    borderRadius: 8,
+    borderWidth: 1,
+    minHeight: 80,
+    padding: 12,
+    marginBottom: 16,
+  },
+  createPostMessage: {
+    alignSelf: 'stretch',
+    marginBottom: 16,
+  },
+  createPostButton: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2f95dc',
+    borderRadius: 8,
+    minHeight: 48,
+  },
+  createPostButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  feedContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
+  },
+  feedPost: {
+    marginBottom: 28,
+  },
+  feedPostHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  feedProfileImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    marginRight: 10,
+  },
+  feedProfileImagePlaceholder: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    marginRight: 10,
+    backgroundColor: '#ddd',
+  },
+  feedPostHeaderText: {
+    flex: 1,
+  },
+  feedUsername: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  feedTimestamp: {
+    fontSize: 13,
+    marginTop: 2,
+  },
+  feedPostImage: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 12,
+  },
+  feedCaption: {
+    fontSize: 16,
+    marginTop: 12,
+  },
 });
 
 export default styles

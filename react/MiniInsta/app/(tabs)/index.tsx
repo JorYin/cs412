@@ -8,9 +8,11 @@ import {
 } from 'react-native';
 import styles from '@/assets/my_styles';
 import type { Post, Profile } from '@/types/MiniInstaTypes';
-
-const API_BASE_URL = 'https://cs-webapps.bu.edu/jordany';
-const PROFILE_ID = 1;
+import {
+  API_BASE_URL,
+  PROFILE_ID,
+  FALLBACK_IMAGE,
+} from '@/types/MiniInstaTypes';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -103,7 +105,7 @@ export default function ProfileScreen() {
                 ) : (
                   <Image
                     source={{
-                      uri: 'https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg',
+                      uri: FALLBACK_IMAGE,
                     }}
                     style={styles.postImage}
                   />

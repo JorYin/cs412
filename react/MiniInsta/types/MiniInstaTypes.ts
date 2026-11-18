@@ -14,7 +14,13 @@ export type Photo = {
 
 export type Post = {
   id: number;
+  profile_id: number;
   caption: string;
   timestamp: string;
   photos: Photo[];
 };
+
+export const API_BASE_URL = 'https://cs-webapps.bu.edu/jordany';
+export const PROFILE_ID = 3;
+export const FALLBACK_IMAGE =
+  'https://img.magnific.com/premium-vector/letter-x-dry-brush-stroke-typography-vector_53876-177859.jpg';
