@@ -30,4 +30,11 @@ urlpatterns = [
     path('profile/<int:pk>/delete_follow', DeleteFollowView.as_view(), name='delete_follow'),
     path('post/<int:pk>/like', LikePostView.as_view(), name='like_post'),
     path('post/<int:pk>/delete_like', DeleteLikeView.as_view(), name='delete_like'),
+
+    # REST API
+    path('api/profiles', ProfileListAPIView.as_view(), name='api_profiles'),
+    path('api/profile/<int:pk>', ProfileDetailAPIView.as_view(), name='api_profile'),
+    path('api/profile/<int:pk>/posts', ProfilePostListAPIView.as_view(), name='api_profile_posts'),
+    path('api/profile/<int:pk>/feed', ProfileFeedAPIView.as_view(), name='api_profile_feed'),
+    path('api/posts', PostListCreateAPIView.as_view(), name='api_posts'),
 ]

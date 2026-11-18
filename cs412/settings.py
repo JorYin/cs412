@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'marathon_analytics',
     'voter_analytics',
     'rest_framework',
+    'rest_framework.authtoken',
     'dadjokes',
 ]
 
@@ -157,6 +158,9 @@ if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     
 ## at the bottom of the file:
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }

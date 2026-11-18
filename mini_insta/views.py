@@ -2,7 +2,7 @@
 # Author: Jordan Yin (jordany@bu.edu), 09/27/2026
 # Description: Class-based views for the mini_insta app to list all Instagram user profiles and view individual profile details.
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Q
 from .models import *
@@ -13,6 +13,11 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+
+# REST API
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from .serializers import *
 
 class ProfileListView(ListView):
   """Display all Instagram user profiles in the database."""
@@ -494,3 +499,46 @@ class DeleteLikeView(LoginRequiredMixin, TemplateView):
       )
       
     return super().dispatch(request, *args, **kwargs)
+
+
+# REST API views
+class ProfileListAPIView(generics.ListAPIView):
+  """Return all profiles."""
+  queryset = Profile.objects.all()
+  serializer_class = ProfileSerializer
+  permission_classes = [AllowAny]
+
+
+class ProfileDetailAPIView(generics.RetrieveAPIView):
+  """Return one profile."""
+  queryset = Profile.objects.all()
+  serializer_class = ProfileSerializer
+  permission_classes = [AllowAny]
+
+
+class ProfilePostListAPIView(generics.ListAPIView):
+  """Return one profile's posts in reverse chronological order."""
+  serializer_class = PostSerializer
+  permission_classes = [AllowAny]
+
+  def get_queryset(self):
+    profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+    return Post.objects.filter(profile=profile).order_by('-timestamp')
+
+
+class ProfileFeedAPIView(generics.ListAPIView):
+  """Return posts from profiles followed by the selected profile."""
+  serializer_class = PostSerializer
+  permission_classes = [AllowAny]
+
+  def get_queryset(self):
+    profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+    followed_ids = profile.get_following().values_list('profile_id', flat=True)
+    return Post.objects.filter(profile_id__in=followed_ids).order_by('-timestamp')
+
+
+class PostListCreateAPIView(generics.ListCreateAPIView):
+  """List posts or create a post."""
+  queryset = Post.objects.all().order_by('-timestamp')
+  serializer_class = PostSerializer
+  permission_classes = [AllowAny]
