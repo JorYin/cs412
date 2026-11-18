@@ -94,7 +94,9 @@ export default function ProfileScreen() {
                 {item.photos[0] ? (
                   <Image
                     source={{
-                      uri: item.photos[0].image,
+                      uri: item.photos[0].image.startsWith('http')
+                        ? item.photos[0].image
+                        : `${API_BASE_URL}${item.photos[0].image}`,
                     }}
                     style={styles.postImage}
                   />

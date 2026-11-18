@@ -19,17 +19,8 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ['id', 'post', 'image', 'timestamp']
 
     def get_image(self, obj):
-        """Return the photo's absolute public URL or uploaded file URL."""
-        image_url = obj.get_image_url()
-        request = self.context.get('request')
-
-        if not image_url:
-            return image_url
-
-        if request:
-            return request.build_absolute_uri(image_url)
-
-        return image_url
+        """Return the photo's public URL or uploaded file URL."""
+        return obj.get_image_url()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
