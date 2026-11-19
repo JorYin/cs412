@@ -1,3 +1,7 @@
+// File: login.tsx
+// Author: Jordan Yin
+// Description: Authenticate a user and display login or logout controls.
+
 import { useState } from 'react';
 import {
   ActivityIndicator,

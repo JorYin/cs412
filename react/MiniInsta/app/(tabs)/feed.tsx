@@ -1,3 +1,7 @@
+// File: feed.tsx
+// Author: Jordan Yin
+// Description: Display posts from profiles in the logged-in user's feed.
+
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,

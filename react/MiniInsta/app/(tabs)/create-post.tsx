@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+// File: create-post.tsx
+// Author: Jordan Yin
+// Description: Collect and submit a new MiniInsta post.
+
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,

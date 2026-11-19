@@ -1,3 +1,7 @@
+// File: _layout.tsx
+// Author: Jordan Yin
+// Description: Configure the MiniInsta tab navigation and tab icons.
+
 import { SymbolView } from 'expo-symbols';
 import { Tabs } from 'expo-router';
 

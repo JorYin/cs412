@@ -1,3 +1,7 @@
+// File: MiniInstaTypes.ts
+// Author: Jordan Yin (jordany@bu.edu), 11/19/2026
+// Description: Shared data types and constants used throughout MiniInsta.
+
 export type Profile = {
   id: number;
   username: string;

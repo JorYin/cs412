@@ -1,3 +1,7 @@
+// File: index.tsx
+// Author: Jordan Yin
+// Description: Display the logged-in user's profile and posts.
+
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
