@@ -57,7 +57,7 @@ class PostSerializer(serializers.ModelSerializer):
     )
     profile_id = serializers.PrimaryKeyRelatedField(
         source='profile',
-        queryset=Profile.objects.all(),
+        read_only=True,
     )
 
     class Meta:

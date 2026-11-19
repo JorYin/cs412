@@ -13,10 +13,17 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth import authenticate
+from django.core.exceptions import PermissionDenied
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 
 # REST API
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import *
 
 class ProfileListView(ListView):
@@ -502,24 +509,51 @@ class DeleteLikeView(LoginRequiredMixin, TemplateView):
 
 
 # REST API views
+class LoginAPIView(APIView):
+  """Authenticate a Django user and return a token and profile."""
+
+  authentication_classes = []
+  permission_classes = [AllowAny]
+
+  def post(self, request):
+    user = authenticate(
+      request,
+      username=request.data.get('username'),
+      password=request.data.get('password'),
+    )
+
+    if user:
+      token, created = Token.objects.get_or_create(user=user)
+      profile = Profile.objects.get(user=user)
+      return Response({
+      'token': token.key,
+      'user': {'id': user.id, 'username': user.username},
+      'profile': ProfileSerializer(profile).data,
+      })
+      
+    return Response({'error': 'Invalid credentials'}, status=401)
+
 class ProfileListAPIView(generics.ListAPIView):
   """Return all profiles."""
   queryset = Profile.objects.all()
   serializer_class = ProfileSerializer
-  permission_classes = [AllowAny]
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
 
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
   """Return one profile."""
   queryset = Profile.objects.all()
   serializer_class = ProfileSerializer
-  permission_classes = [AllowAny]
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
 
 
 class ProfilePostListAPIView(generics.ListAPIView):
   """Return one profile's posts in reverse chronological order."""
   serializer_class = PostSerializer
-  permission_classes = [AllowAny]
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
     profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
@@ -529,10 +563,17 @@ class ProfilePostListAPIView(generics.ListAPIView):
 class ProfileFeedAPIView(generics.ListAPIView):
   """Return posts from profiles followed by the selected profile."""
   serializer_class = PostSerializer
-  permission_classes = [AllowAny]
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+    profile = get_object_or_404(Profile, user=self.request.user)
+
+    if profile.pk != self.kwargs['pk']:
+      raise PermissionDenied(
+        'You can only view the feed for your own profile.'
+      )
+
     followed_ids = profile.get_following().values_list('profile_id', flat=True)
     return Post.objects.filter(profile_id__in=followed_ids).order_by('-timestamp')
 
@@ -541,4 +582,9 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
   """List posts or create a post."""
   queryset = Post.objects.all().order_by('-timestamp')
   serializer_class = PostSerializer
-  permission_classes = [AllowAny]
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
+
+  def perform_create(self, serializer):
+    profile = get_object_or_404(Profile, user=self.request.user)
+    serializer.save(profile=profile)
