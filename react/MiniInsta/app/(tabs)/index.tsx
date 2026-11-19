@@ -10,21 +10,26 @@ import styles from '@/assets/my_styles';
 import type { Post, Profile } from '@/types/MiniInstaTypes';
 import {
   API_BASE_URL,
-  PROFILE_ID,
   FALLBACK_IMAGE,
 } from '@/types/MiniInstaTypes';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProfileScreen() {
+  const { profileId, authFetch } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   async function loadProfileData() {
+    if (!profileId) {
+      return;
+    }
+
     try {
       const [profileResponse, postsResponse] = await Promise.all([
-        fetch(`${API_BASE_URL}/mini_insta/api/profile/${PROFILE_ID}`),
-        fetch(`${API_BASE_URL}/mini_insta/api/profile/${PROFILE_ID}/posts`),
+        authFetch(`${API_BASE_URL}/mini_insta/api/profile/${profileId}`),
+        authFetch(`${API_BASE_URL}/mini_insta/api/profile/${profileId}/posts`),
       ]);
 
       if (!profileResponse.ok || !postsResponse.ok) {
@@ -48,8 +53,11 @@ export default function ProfileScreen() {
   }
 
   useEffect(() => {
-    loadProfileData();
-  }, []);
+    if (profileId) {
+      setLoading(true);
+      loadProfileData();
+    }
+  }, [profileId]);
 
   if (error) {
     return (

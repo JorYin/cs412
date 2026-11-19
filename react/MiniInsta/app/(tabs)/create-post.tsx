@@ -7,18 +7,24 @@ import {
   View,
 } from 'react-native';
 import styles from '@/assets/my_styles';
+import { useAuth } from '@/context/AuthContext';
 import {
   API_BASE_URL,
-  PROFILE_ID,
 } from '@/types/MiniInstaTypes';
 
 export default function CreatePostScreen() {
+  const { authFetch, profileId, isLoading: isRestoringSession } = useAuth();
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
   async function createPost() {
+    if (!profileId) {
+      setMessage('Waiting for profile information.');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
@@ -27,7 +33,7 @@ export default function CreatePostScreen() {
       : [];
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `${API_BASE_URL}/mini_insta/api/posts`,
         {
           method: 'POST',
@@ -35,7 +41,6 @@ export default function CreatePostScreen() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            profile_id: PROFILE_ID,
             caption,
             image_urls: imageUrlList,
           }),
@@ -64,6 +69,10 @@ export default function CreatePostScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Create Post</Text>
 
+      {isRestoringSession ? (
+        <ActivityIndicator size="large" />
+      ) : null}
+
       <Text style={styles.label}>Caption</Text>
       <TextInput
         value={caption}
@@ -90,7 +99,7 @@ export default function CreatePostScreen() {
       <Pressable
         style={styles.createPostButton}
         onPress={createPost}
-        disabled={isLoading}
+        disabled={isLoading || isRestoringSession || !profileId}
       >
         {isLoading ? (
           <ActivityIndicator color="#fff" />

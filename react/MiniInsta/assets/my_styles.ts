@@ -183,6 +183,42 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 12,
   },
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  loginTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  loginMessage: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  loginInput: {
+    borderColor: '#999',
+    borderRadius: 8,
+    borderWidth: 1,
+    fontSize: 16,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    minHeight: 48,
+  },
+  loginButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2f95dc',
+    borderRadius: 8,
+    minHeight: 48,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles

@@ -10,23 +10,28 @@ import styles from '@/assets/my_styles';
 import type { Post, Profile } from '@/types/MiniInstaTypes';
 import {
   API_BASE_URL,
-  PROFILE_ID,
   FALLBACK_IMAGE,
 } from '@/types/MiniInstaTypes';
+import { useAuth } from '@/context/AuthContext';
 
 export default function FeedScreen() {
+  const { profileId, authFetch } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   async function loadFeed() {
+    if (!profileId) {
+      return;
+    }
+
     try {
       const [feedResponse, profilesResponse] = await Promise.all([
-        fetch(
-          `${API_BASE_URL}/mini_insta/api/profile/${PROFILE_ID}/feed`,
+        authFetch(
+          `${API_BASE_URL}/mini_insta/api/profile/${profileId}/feed`,
         ),
-        fetch(`${API_BASE_URL}/mini_insta/api/profiles`),
+        authFetch(`${API_BASE_URL}/mini_insta/api/profiles`),
       ]);
 
       if (!feedResponse.ok || !profilesResponse.ok) {
@@ -50,8 +55,11 @@ export default function FeedScreen() {
   }
 
   useEffect(() => {
-    loadFeed();
-  }, []);
+    if (profileId) {
+      setLoading(true);
+      loadFeed();
+    }
+  }, [profileId]);
 
   function getProfile(profileId: number) {
     return profiles.find((profile) => profile.id === profileId);
