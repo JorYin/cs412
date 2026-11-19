@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -13,7 +13,7 @@ import {
 } from '@/types/MiniInstaTypes';
 
 export default function CreatePostScreen() {
-  const { authFetch, profileId, isLoading: isRestoringSession } = useAuth();
+  const { token, authFetch, profileId } = useAuth();
   const [caption, setCaption] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -69,44 +69,46 @@ export default function CreatePostScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Create Post</Text>
 
-      {isRestoringSession ? (
+      {!profileId || !token ? (
         <ActivityIndicator size="large" />
-      ) : null}
+      ) : (
+        <>
+          <Text style={styles.label}>Caption</Text>
+          <TextInput
+            value={caption}
+            onChangeText={setCaption}
+            style={styles.captionInput}
+            multiline
+            placeholder="Write a caption"
+          />
 
-      <Text style={styles.label}>Caption</Text>
-      <TextInput
-        value={caption}
-        onChangeText={setCaption}
-        style={styles.captionInput}
-        multiline
-        placeholder="Write a caption"
-      />
+          <Text style={styles.label}>Image URL</Text>
+          <TextInput
+            value={imageUrl}
+            onChangeText={setImageUrl}
+            style={styles.imageUrlsInput}
+            multiline
+            autoCapitalize="none"
+            placeholder="https://example.com/photo1.jpg"
+          />
 
-      <Text style={styles.label}>Image URL</Text>
-      <TextInput
-        value={imageUrl}
-        onChangeText={setImageUrl}
-        style={styles.imageUrlsInput}
-        multiline
-        autoCapitalize="none"
-        placeholder="https://example.com/photo1.jpg"
-      />
+          {message ? (
+            <Text style={styles.createPostMessage}>{message}</Text>
+          ) : null}
 
-      {message ? (
-        <Text style={styles.createPostMessage}>{message}</Text>
-      ) : null}
-
-      <Pressable
-        style={styles.createPostButton}
-        onPress={createPost}
-        disabled={isLoading || isRestoringSession || !profileId}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.createPostButtonText}>Create Post</Text>
-        )}
-      </Pressable>
+          <Pressable
+            style={styles.createPostButton}
+            onPress={createPost}
+            disabled={isLoading || !profileId}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.createPostButtonText}>Create Post</Text>
+            )}
+          </Pressable>
+        </>
+      )}
     </View>
   );
 }

@@ -15,10 +15,11 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProfileScreen() {
-  const { profileId, authFetch } = useAuth();
+  const { token, profileId, authFetch } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
   async function loadProfileData() {
@@ -53,11 +54,21 @@ export default function ProfileScreen() {
   }
 
   useEffect(() => {
-    if (profileId) {
+    if (profileId && token) {
       setLoading(true);
       loadProfileData();
+    } else {
+      setProfile(null);
+      setPosts([]);
+      setLoading(true);
     }
-  }, [profileId]);
+  }, [token, profileId]);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await loadProfileData();
+    setRefreshing(false);
+  }
 
   if (error) {
     return (
@@ -99,6 +110,8 @@ export default function ProfileScreen() {
             keyExtractor={(post) => post.id.toString()}
             numColumns={3}
             columnWrapperStyle={styles.postGridRow}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
             renderItem={({ item }) => (
               <View style={styles.postGridItem}>
                 {item.photos[0] ? (

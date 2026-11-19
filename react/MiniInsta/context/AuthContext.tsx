@@ -22,13 +22,11 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => { // restore session on launch
     (async () => {
       setToken(await AsyncStorage.getItem('auth_token'));
       setProfileId(await AsyncStorage.getItem('profile_id'));
-      setIsLoading(false);
     })();
   }, []);
   
@@ -72,7 +70,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res;
   };
   
-  return <AuthContext.Provider value={{ token, profileId,
-    isLoading, login, logout, authFetch }}>{children}
+  return <AuthContext.Provider value={{ token, profileId, login, logout, authFetch }}>{children}
   </AuthContext.Provider>;
 }

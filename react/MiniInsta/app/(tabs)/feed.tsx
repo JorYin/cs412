@@ -15,10 +15,11 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 export default function FeedScreen() {
-  const { profileId, authFetch } = useAuth();
+  const { token, profileId, authFetch } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
   async function loadFeed() {
@@ -55,11 +56,21 @@ export default function FeedScreen() {
   }
 
   useEffect(() => {
-    if (profileId) {
+    if (profileId && token) {
       setLoading(true);
       loadFeed();
+    } else {
+      setPosts([]);
+      setProfiles([]);
+      setLoading(true);
     }
-  }, [profileId]);
+  }, [token, profileId]);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await loadFeed();
+    setRefreshing(false);
+  }
 
   function getProfile(profileId: number) {
     return profiles.find((profile) => profile.id === profileId);
@@ -86,6 +97,8 @@ export default function FeedScreen() {
           data={posts}
           keyExtractor={(post) => post.id.toString()}
           contentContainerStyle={styles.feedContainer}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
           renderItem={({ item }) => {
             const postProfile = getProfile(item.profile_id);
 
