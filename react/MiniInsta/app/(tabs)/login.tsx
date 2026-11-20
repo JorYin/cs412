@@ -22,19 +22,23 @@ export default function LoginScreen() {
   const [message, setMessage] = useState('');
 
   async function handleLogin() {
+    // Show a spinner and prevent another login while the request is pending.
     setLoading(true);
     setMessage('');
 
     try {
+      // The auth context sends the credentials and stores the returned session.
       await login(username, password);
       setMessage('Login successful.');
     } catch (requestError) {
+      // Display either the API error or a fallback message to the user.
       setMessage(
         requestError instanceof Error
           ? requestError.message
           : 'Could not log in.',
       );
     } finally {
+      // Always stop the spinner, whether login succeeds or fails.
       setLoading(false);
     }
   }

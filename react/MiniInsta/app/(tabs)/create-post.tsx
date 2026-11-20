@@ -24,11 +24,13 @@ export default function CreatePostScreen() {
   const [message, setMessage] = useState('');
 
   async function createPost() {
+    // Do not submit until the authenticated user's profile is available.
     if (!profileId) {
       setMessage('Waiting for profile information.');
       return;
     }
 
+    // Show a spinner and prevent duplicate submissions while creating the post.
     setLoading(true);
     setMessage('');
 
@@ -37,6 +39,7 @@ export default function CreatePostScreen() {
       : [];
 
     try {
+      // authFetch adds authentication, while this request sends the post as JSON.
       const response = await authFetch(
         `${API_BASE_URL}/mini_insta/api/posts`,
         {
@@ -51,20 +54,24 @@ export default function CreatePostScreen() {
         },
       );
 
+      // fetch does not reject for HTTP errors, so check the response status.
       if (!response.ok) {
         throw new Error('Could not create the post.');
       }
 
+      // Clear the form and confirm that the post was created.
       setCaption('');
       setImageUrl('');
       setMessage('Post created successfully.');
     } catch (requestError) {
+      // Display either the API error or a fallback message to the user.
       setMessage(
         requestError instanceof Error
           ? requestError.message
           : 'Could not create the post.',
       );
     } finally {
+      // Always stop the spinner, whether the request succeeds or fails.
       setLoading(false);
     }
   }

@@ -27,32 +27,40 @@ export default function ProfileScreen() {
   const [error, setError] = useState('');
 
   async function loadProfileData() {
+    // A profile ID is required to build the profile API URLs.
     if (!profileId) {
       return;
     }
 
     try {
+      // authFetch adds the user's authentication token to each request.
+      // Promise.all loads the profile and posts at the same time.
       const [profileResponse, postsResponse] = await Promise.all([
         authFetch(`${API_BASE_URL}/mini_insta/api/profile/${profileId}`),
         authFetch(`${API_BASE_URL}/mini_insta/api/profile/${profileId}/posts`),
       ]);
 
+      // fetch does not reject for HTTP errors, so check both responses manually.
       if (!profileResponse.ok || !postsResponse.ok) {
         throw new Error('Could not load profile data.');
       }
 
+      // Convert both successful response bodies from JSON into JavaScript data.
       const profileData = await profileResponse.json();
       const postsData = await postsResponse.json();
 
+      // Store the API data so React can render the profile and post grid.
       setProfile(profileData);
       setPosts(postsData.results ?? []);
     } catch (requestError) {
+      // Save a readable error message for the error state in the UI.
       setError(
         requestError instanceof Error
           ? requestError.message
           : 'Could not load profile data.',
       );
     } finally {
+      // Hide the loading indicator after either success or failure.
       setLoading(false);
     }
   }
@@ -69,6 +77,7 @@ export default function ProfileScreen() {
   }, [token, profileId]);
 
   async function handleRefresh() {
+    // Keep the pull-to-refresh indicator visible until the request finishes.
     setRefreshing(true);
     await loadProfileData();
     setRefreshing(false);

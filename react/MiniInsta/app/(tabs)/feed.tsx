@@ -27,11 +27,14 @@ export default function FeedScreen() {
   const [error, setError] = useState('');
 
   async function loadFeed() {
+    // A profile ID is required to request the current user's feed.
     if (!profileId) {
       return;
     }
 
     try {
+      // authFetch includes the user's authentication token.
+      // Load feed posts and profile details concurrently.
       const [feedResponse, profilesResponse] = await Promise.all([
         authFetch(
           `${API_BASE_URL}/mini_insta/api/profile/${profileId}/feed`,
@@ -39,22 +42,27 @@ export default function FeedScreen() {
         authFetch(`${API_BASE_URL}/mini_insta/api/profiles`),
       ]);
 
+      // fetch only rejects network failures, so explicitly check HTTP status.
       if (!feedResponse.ok || !profilesResponse.ok) {
         throw new Error('Could not load the feed.');
       }
 
+      // Parse the successful API responses into JavaScript data.
       const feedData = await feedResponse.json();
       const profilesData = await profilesResponse.json();
 
+      // Save posts and profiles so the feed can display each post's author.
       setPosts(feedData.results ?? []);
       setProfiles(profilesData.results ?? profilesData);
     } catch (requestError) {
+      // Save a readable error message for the error state in the UI.
       setError(
         requestError instanceof Error
           ? requestError.message
           : 'Could not load the feed.',
       );
     } finally {
+      // Hide the loading indicator after either success or failure.
       setLoading(false);
     }
   }
@@ -71,6 +79,7 @@ export default function FeedScreen() {
   }, [token, profileId]);
 
   async function handleRefresh() {
+    // Keep the pull-to-refresh indicator visible until the feed reloads.
     setRefreshing(true);
     await loadFeed();
     setRefreshing(false);
